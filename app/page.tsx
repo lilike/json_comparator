@@ -49,6 +49,11 @@ export default function HomePage() {
       const result = compareJson(leftJson, rightJson)
       
       if (result.success) {
+        console.log('比较成功，结果:', result)
+        console.log('leftFormatted preview:', result.leftFormatted?.substring(0, 100))
+        console.log('rightFormatted preview:', result.rightFormatted?.substring(0, 100))
+        console.log('原始leftJson preview:', leftJson.substring(0, 100))
+        console.log('原始rightJson preview:', rightJson.substring(0, 100))
         setCompareResult(result)
         setShowComparison(true)
         // 清除错误状态
@@ -97,6 +102,7 @@ export default function HomePage() {
       const result = mode === 'format' ? formatJson(currentJson) : minifyJson(currentJson)
       
       if (result.success && result.formattedJson) {
+        console.log(`格式化成功 (${side}):`, result.formattedJson.substring(0, 100))
         setJson(result.formattedJson)
         setError('')
       } else {
@@ -398,13 +404,13 @@ export default function HomePage() {
             {/* 并排的JSON差异显示 */}
             <div className="flex-1 grid lg:grid-cols-2 gap-4 min-h-0">
               <JsonDiffViewer
-                json={leftJson}
+                json={compareResult?.leftFormatted || leftJson}
                 diffs={compareResult?.diffs || []}
                 side="left"
                 label="JSON A (左侧)"
               />
               <JsonDiffViewer
-                json={rightJson}
+                json={compareResult?.rightFormatted || rightJson}
                 diffs={compareResult?.diffs || []}
                 side="right"
                 label="JSON B (右侧)"

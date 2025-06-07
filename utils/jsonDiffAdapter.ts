@@ -34,6 +34,8 @@ export interface DiffResult {
   error?: string
   leftParsed?: any
   rightParsed?: any
+  leftFormatted?: string // 保留格式化后的左侧JSON字符串
+  rightFormatted?: string // 保留格式化后的右侧JSON字符串
   rawDiff?: any // json-diff的原始结果
 }
 
@@ -360,6 +362,8 @@ export const compareJson = (leftJson: string, rightJson: string): DiffResult => 
       diffs: diffs,
       leftParsed,
       rightParsed,
+      leftFormatted: leftJson, // 直接使用原始的用户输入字符串
+      rightFormatted: rightJson, // 直接使用原始的用户输入字符串
       rawDiff
     }
   } catch (error) {

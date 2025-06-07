@@ -172,6 +172,9 @@ export default function JsonDiffViewer({ json, diffs, side, label }: JsonDiffVie
   
   // 添加调试信息
   console.log(`[JsonDiffViewer] ${label} (${side}) received diffs:`, diffs)
+  console.log(`[JsonDiffViewer] ${label} (${side}) JSON preview:`, json.substring(0, 100))
+  console.log(`[JsonDiffViewer] ${label} (${side}) JSON has \\n:`, json.includes('\n'))
+  console.log(`[JsonDiffViewer] ${label} (${side}) JSON lines count:`, json.split('\n').length)
   
   // 解析JSON并生成带行号的结构  
   const linesWithDiffs = useMemo(() => {
@@ -229,7 +232,7 @@ export default function JsonDiffViewer({ json, diffs, side, label }: JsonDiffVie
           <div className="w-12 text-gray-500 text-right pr-4 select-none text-sm">
             {lineNumber}
           </div>
-          <div className="flex-1 text-gray-300">{content}</div>
+          <div className="flex-1 text-gray-300 font-mono whitespace-pre">{content}</div>
         </div>
       )
     }
@@ -317,7 +320,7 @@ export default function JsonDiffViewer({ json, diffs, side, label }: JsonDiffVie
         <div className="flex-1 relative group">
           <div className="flex items-center gap-2">
             <span className="font-bold text-sm">{icon}</span>
-            <span className="font-mono">{displayContent}</span>
+            <span className="font-mono whitespace-pre">{displayContent}</span>
           </div>
           
           {/* 悬浮提示 - 增强CHANGED类型的提示信息 */}
