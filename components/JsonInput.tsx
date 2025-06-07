@@ -31,13 +31,13 @@ export default function JsonInput({
   }, [value])
 
   return (
-    <div className="relative">
+    <div className="relative h-full flex flex-col">
       <textarea
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
         disabled={isFormatting}
-        className={`w-full h-96 p-4 bg-gray-800 border rounded-lg text-white font-mono text-sm resize-none outline-none transition-all ${
+        className={`w-full flex-1 p-4 bg-gray-800 border rounded-lg text-white font-mono text-sm resize-none outline-none transition-all ${
           isFormatting 
             ? 'opacity-50 cursor-not-allowed border-gray-600' 
             : error 
@@ -81,7 +81,7 @@ export default function JsonInput({
 
       {/* 错误提示 */}
       {error && (
-        <div className="mt-2 p-2 bg-red-900/20 border border-red-500 rounded text-red-400 text-sm">
+        <div className="mt-2 p-2 bg-red-900/20 border border-red-500 rounded text-red-400 text-sm flex-shrink-0">
           <div className="flex items-center gap-2">
             <AlertCircle size={14} />
             <span>{error}</span>
@@ -91,7 +91,7 @@ export default function JsonInput({
 
       {/* JSON语法错误提示 */}
       {!error && value.trim() && isValid === false && (
-        <div className="mt-2 p-2 bg-yellow-900/20 border border-yellow-500 rounded text-yellow-400 text-sm">
+        <div className="mt-2 p-2 bg-yellow-900/20 border border-yellow-500 rounded text-yellow-400 text-sm flex-shrink-0">
           <div className="flex items-center gap-2">
             <AlertCircle size={14} />
             <span>JSON格式不正确，请检查语法</span>
@@ -101,7 +101,7 @@ export default function JsonInput({
 
       {/* 成功提示 */}
       {!error && value.trim() && isValid === true && (
-        <div className="mt-2 p-2 bg-green-900/20 border border-green-500 rounded text-green-400 text-sm">
+        <div className="mt-2 p-2 bg-green-900/20 border border-green-500 rounded text-green-400 text-sm flex-shrink-0">
           <div className="flex items-center gap-2">
             <CheckCircle size={14} />
             <span>JSON格式正确</span>

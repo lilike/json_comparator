@@ -104,13 +104,13 @@ export default function JsonDiffViewer({ json, diffs, side, label }: JsonDiffVie
   }
 
   return (
-    <div className="bg-gray-800 rounded-lg overflow-hidden">
+    <div className="bg-gray-800 rounded-lg overflow-hidden h-full flex flex-col">
       {/* 标题栏 */}
-      <div className="bg-gray-700 px-4 py-3 border-b border-gray-600">
+      <div className="bg-gray-700 px-4 py-2 border-b border-gray-600 flex-shrink-0">
         <div className="flex items-center justify-between">
-          <h3 className="font-semibold text-white">{label}</h3>
+          <h3 className="font-semibold text-white text-sm">{label}</h3>
           {stats.total > 0 && (
-            <div className="flex items-center gap-2 text-sm">
+            <div className="flex items-center gap-2 text-xs">
               {stats.added > 0 && (
                 <span className="bg-green-500/20 text-green-400 px-2 py-1 rounded">
                   +{stats.added}
@@ -132,7 +132,7 @@ export default function JsonDiffViewer({ json, diffs, side, label }: JsonDiffVie
       </div>
       
       {/* JSON内容 */}
-      <div className="p-4 font-mono text-sm max-h-96 overflow-auto">
+      <div className="p-4 font-mono text-sm flex-1 overflow-auto">
         {linesWithDiffs.length === 0 ? (
           <div className="text-gray-500 text-center py-8">
             {json.trim() ? '无法解析JSON' : '请输入JSON内容'}

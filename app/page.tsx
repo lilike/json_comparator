@@ -259,22 +259,27 @@ export default function HomePage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 to-gray-800">
-      <div className="container mx-auto px-4 py-8">
-        {/* 页面头部 */}
-        <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-white mb-2">
-            JSON智能比较工具
-          </h1>
-          <p className="text-gray-300 text-lg">
-            解决格式化、排序、差异标记等问题的专业工具
-          </p>
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 to-gray-800 flex flex-col">
+      {/* 页面头部 - 单行布局 */}
+      <div className="flex-shrink-0 px-4 py-2">
+        <div className="flex items-center justify-between">
+          {/* 左侧：标题区域 */}
+          <div className="flex items-center gap-4">
+            <h1 className="text-xl font-bold text-white">
+              JSON智能比较工具
+            </h1>
+            <p className="text-gray-300 text-xs">
+              解决格式化、排序、差异标记等问题的专业工具
+            </p>
+          </div>
+          
+          {/* 右侧：状态图例 */}
+          <ColorLegend />
         </div>
+      </div>
 
-        {/* 颜色图例 */}
-        <ColorLegend />
-
-        {/* 控制面板 */}
+      {/* 控制面板 - 超紧凑化 */}
+      <div className="flex-shrink-0 px-4 py-1">
         <ControlPanel 
           sortOption={sortOption}
           onSortChange={setSortOption}
@@ -284,106 +289,112 @@ export default function HomePage() {
           hasContent={leftJson.trim() !== '' || rightJson.trim() !== ''}
           isComparing={isComparing}
         />
+      </div>
 
-        {/* 主要内容区域 */}
+      {/* 主要内容区域 - 占据剩余空间 */}
+      <div className="flex-1 px-4 pb-4 min-h-0">
         {!showComparison ? (
           /* 编辑模式 */
-          <div className="grid lg:grid-cols-2 grid-cols-1 gap-6 mt-6">
+          <div className="grid lg:grid-cols-2 grid-cols-1 gap-4 h-full">
             {/* 左侧JSON输入 */}
-            <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <h2 className="text-xl font-semibold text-white">JSON A</h2>
+            <div className="flex flex-col h-full">
+              <div className="flex items-center justify-between mb-2 flex-shrink-0">
+                <h2 className="text-lg font-semibold text-white">JSON A</h2>
                 <div className="flex items-center gap-2">
                   <button
                     onClick={() => handleFormat('left', 'format')}
                     disabled={leftFormatting || leftSorting || !leftJson.trim()}
-                    className="flex items-center gap-2 px-3 py-1 bg-gray-700 hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-md transition-colors"
+                    className="flex items-center gap-1 px-2 py-1 bg-gray-700 hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed text-white text-xs rounded-md transition-colors"
                   >
-                    <Settings size={16} />
+                    <Settings size={14} />
                     格式化
                   </button>
                   <button
                     onClick={() => handleFormat('left', 'minify')}
                     disabled={leftFormatting || leftSorting || !leftJson.trim()}
-                    className="flex items-center gap-2 px-3 py-1 bg-gray-700 hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-md transition-colors"
+                    className="flex items-center gap-1 px-2 py-1 bg-gray-700 hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed text-white text-xs rounded-md transition-colors"
                   >
-                    <Minimize2 size={16} />
+                    <Minimize2 size={14} />
                     压缩
                   </button>
                   {sortOption !== 'none' && (
                     <button
                       onClick={() => handleManualSort('left')}
                       disabled={leftFormatting || leftSorting || !leftJson.trim()}
-                      className="flex items-center gap-2 px-3 py-1 bg-purple-600 hover:bg-purple-700 disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-md transition-colors"
+                      className="flex items-center gap-1 px-2 py-1 bg-purple-600 hover:bg-purple-700 disabled:opacity-50 disabled:cursor-not-allowed text-white text-xs rounded-md transition-colors"
                     >
-                      <ArrowUpDown size={16} />
+                      <ArrowUpDown size={14} />
                       排序
                     </button>
                   )}
                 </div>
               </div>
-              <JsonInput
-                value={leftJson}
-                onChange={(value) => {
-                  setLeftJson(value)
-                  if (leftError) setLeftError('') // 清除错误状态
-                }}
-                placeholder="请粘贴第一个JSON..."
-                error={leftError}
-                isFormatting={leftFormatting || leftSorting}
-              />
+              <div className="flex-1 min-h-0">
+                <JsonInput
+                  value={leftJson}
+                  onChange={(value) => {
+                    setLeftJson(value)
+                    if (leftError) setLeftError('') // 清除错误状态
+                  }}
+                  placeholder="请粘贴第一个JSON..."
+                  error={leftError}
+                  isFormatting={leftFormatting || leftSorting}
+                />
+              </div>
             </div>
 
             {/* 右侧JSON输入 */}
-            <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <h2 className="text-xl font-semibold text-white">JSON B</h2>
+            <div className="flex flex-col h-full">
+              <div className="flex items-center justify-between mb-2 flex-shrink-0">
+                <h2 className="text-lg font-semibold text-white">JSON B</h2>
                 <div className="flex items-center gap-2">
                   <button
                     onClick={() => handleFormat('right', 'format')}
                     disabled={rightFormatting || rightSorting || !rightJson.trim()}
-                    className="flex items-center gap-2 px-3 py-1 bg-gray-700 hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-md transition-colors"
+                    className="flex items-center gap-1 px-2 py-1 bg-gray-700 hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed text-white text-xs rounded-md transition-colors"
                   >
-                    <Settings size={16} />
+                    <Settings size={14} />
                     格式化
                   </button>
                   <button
                     onClick={() => handleFormat('right', 'minify')}
                     disabled={rightFormatting || rightSorting || !rightJson.trim()}
-                    className="flex items-center gap-2 px-3 py-1 bg-gray-700 hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-md transition-colors"
+                    className="flex items-center gap-1 px-2 py-1 bg-gray-700 hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed text-white text-xs rounded-md transition-colors"
                   >
-                    <Minimize2 size={16} />
+                    <Minimize2 size={14} />
                     压缩
                   </button>
                   {sortOption !== 'none' && (
                     <button
                       onClick={() => handleManualSort('right')}
                       disabled={rightFormatting || rightSorting || !rightJson.trim()}
-                      className="flex items-center gap-2 px-3 py-1 bg-purple-600 hover:bg-purple-700 disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-md transition-colors"
+                      className="flex items-center gap-1 px-2 py-1 bg-purple-600 hover:bg-purple-700 disabled:opacity-50 disabled:cursor-not-allowed text-white text-xs rounded-md transition-colors"
                     >
-                      <ArrowUpDown size={16} />
+                      <ArrowUpDown size={14} />
                       排序
                     </button>
                   )}
                 </div>
               </div>
-              <JsonInput
-                value={rightJson}
-                onChange={(value) => {
-                  setRightJson(value)
-                  if (rightError) setRightError('') // 清除错误状态
-                }}
-                placeholder="请粘贴第二个JSON..."
-                error={rightError}
-                isFormatting={rightFormatting || rightSorting}
-              />
+              <div className="flex-1 min-h-0">
+                <JsonInput
+                  value={rightJson}
+                  onChange={(value) => {
+                    setRightJson(value)
+                    if (rightError) setRightError('') // 清除错误状态
+                  }}
+                  placeholder="请粘贴第二个JSON..."
+                  error={rightError}
+                  isFormatting={rightFormatting || rightSorting}
+                />
+              </div>
             </div>
           </div>
         ) : (
           /* 比较模式 */
-          <div className="mt-6 space-y-6">
+          <div className="h-full flex flex-col">
             {/* 并排的JSON差异显示 */}
-            <div className="grid lg:grid-cols-2 gap-6">
+            <div className="flex-1 grid lg:grid-cols-2 gap-4 min-h-0">
               <JsonDiffViewer
                 json={leftJson}
                 diffs={compareResult?.diffs || []}
@@ -399,25 +410,23 @@ export default function HomePage() {
             </div>
             
             {/* 返回编辑按钮 */}
-            <div className="text-center">
+            <div className="text-center py-4 flex-shrink-0">
               <button
                 onClick={() => setShowComparison(false)}
-                className="px-6 py-3 bg-gray-700 hover:bg-gray-600 text-white rounded-lg font-medium transition-colors"
+                className="px-6 py-2 bg-gray-700 hover:bg-gray-600 text-white rounded-lg font-medium transition-colors"
               >
                 返回编辑模式
               </button>
             </div>
           </div>
         )}
+      </div>
 
-
-
-        {/* 底部提示 */}
-        <div className="mt-8 text-center">
-          <p className="text-gray-400 text-sm">
-            提示：支持自动格式化、智能排序和详细的差异标记
-          </p>
-        </div>
+      {/* 底部提示 - 紧凑化 */}
+      <div className="flex-shrink-0 px-4 pb-2">
+        <p className="text-gray-400 text-xs text-center">
+          提示：支持自动格式化、智能排序和详细的差异标记
+        </p>
       </div>
     </div>
   )

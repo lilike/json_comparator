@@ -21,66 +21,58 @@ export default function ControlPanel({
   isComparing = false 
 }: ControlPanelProps) {
   return (
-    <div className="bg-gray-800 rounded-lg p-6 shadow-xl">
-      <div className="flex flex-col lg:flex-row gap-4 items-center justify-between">
-        <div className="flex flex-col sm:flex-row gap-4 items-center w-full lg:w-auto">
+    <div className="bg-gray-800 rounded-lg p-2 shadow-lg">
+      <div className="flex flex-col lg:flex-row gap-2 items-center justify-between">
+        <div className="flex flex-col sm:flex-row gap-2 items-center w-full lg:w-auto">
           {/* 排序选项 */}
-          <div className="flex flex-col gap-3">
-            <div className="flex items-center gap-4">
-              <div className="flex items-center gap-2">
-                <SortAsc size={20} className="text-gray-300" />
-                <span className="text-white font-medium">排序方式：</span>
-              </div>
-              <div className="flex gap-2">
-                <button
-                  onClick={() => onSortChange('none')}
-                  className={`px-3 py-2 rounded-md text-sm font-medium transition-all ${
-                    sortOption === 'none'
-                      ? 'bg-blue-600 text-white shadow-lg scale-105'
-                      : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
-                  }`}
-                >
-                  原始顺序
-                </button>
-                <button
-                  onClick={() => onSortChange('alphabetical')}
-                  className={`px-3 py-2 rounded-md text-sm font-medium transition-all ${
-                    sortOption === 'alphabetical'
-                      ? 'bg-blue-600 text-white shadow-lg scale-105'
-                      : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
-                  }`}
-                >
-                  字母排序
-                </button>
-                <button
-                  onClick={() => onSortChange('type')}
-                  className={`px-3 py-2 rounded-md text-sm font-medium transition-all ${
-                    sortOption === 'type'
-                      ? 'bg-blue-600 text-white shadow-lg scale-105'
-                      : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
-                  }`}
-                >
-                  类型排序
-                </button>
-              </div>
+          <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1">
+              <SortAsc size={14} className="text-gray-300" />
+              <span className="text-white text-xs font-medium">排序方式：</span>
             </div>
-            
-            {/* 排序说明 */}
-            <div className="flex items-center gap-2 text-sm text-gray-400">
-              <Info size={14} />
-              <span>{getSortDescription(sortOption)}</span>
+            <div className="flex gap-1">
+              <button
+                onClick={() => onSortChange('none')}
+                className={`px-2 py-0.5 rounded text-xs font-medium transition-all ${
+                  sortOption === 'none'
+                    ? 'bg-blue-600 text-white shadow-sm'
+                    : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+                }`}
+              >
+                原始顺序
+              </button>
+              <button
+                onClick={() => onSortChange('alphabetical')}
+                className={`px-2 py-0.5 rounded text-xs font-medium transition-all ${
+                  sortOption === 'alphabetical'
+                    ? 'bg-blue-600 text-white shadow-sm'
+                    : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+                }`}
+              >
+                字母排序
+              </button>
+              <button
+                onClick={() => onSortChange('type')}
+                className={`px-2 py-0.5 rounded text-xs font-medium transition-all ${
+                  sortOption === 'type'
+                    ? 'bg-blue-600 text-white shadow-sm'
+                    : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+                }`}
+              >
+                类型排序
+              </button>
             </div>
           </div>
 
           {/* 快捷操作按钮 */}
-          <div className="flex gap-3">
+          <div className="flex gap-1">
             {onFormatBoth && (
               <button
                 onClick={onFormatBoth}
                 disabled={!hasContent}
-                className="flex items-center gap-2 px-4 py-2 bg-green-600 hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-md font-medium transition-colors"
+                className="flex items-center gap-1 px-2 py-0.5 bg-green-600 hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed text-white rounded text-xs font-medium transition-colors"
               >
-                <Zap size={16} />
+                <Zap size={12} />
                 一键格式化
               </button>
             )}
@@ -89,9 +81,9 @@ export default function ControlPanel({
             {onLoadExample && (
               <button
                 onClick={onLoadExample}
-                className="flex items-center gap-2 px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-md font-medium transition-colors"
+                className="flex items-center gap-1 px-2 py-0.5 bg-purple-600 hover:bg-purple-700 text-white rounded text-xs font-medium transition-colors"
               >
-                <FileText size={16} />
+                <FileText size={12} />
                 加载示例数据
               </button>
             )}
@@ -102,20 +94,26 @@ export default function ControlPanel({
         <button
           onClick={onCompare}
           disabled={isComparing || !hasContent}
-          className="flex items-center gap-2 px-6 py-3 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-lg font-medium transition-colors shadow-lg"
+          className="flex items-center gap-1 px-3 py-1 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed text-white rounded text-xs font-medium transition-colors shadow-sm"
         >
           {isComparing ? (
             <>
-              <div className="animate-spin h-5 w-5 border-2 border-white border-t-transparent rounded-full"></div>
+              <div className="animate-spin h-3 w-3 border-2 border-white border-t-transparent rounded-full"></div>
               正在比较...
             </>
           ) : (
             <>
-              <ArrowLeftRight size={20} />
+              <ArrowLeftRight size={14} />
               开始比较
             </>
           )}
         </button>
+      </div>
+      
+      {/* 排序说明 - 移到底部作为提示 */}
+      <div className="flex items-center justify-center gap-1 mt-1 text-xs text-gray-400">
+        <Info size={10} />
+        <span>{getSortDescription(sortOption)}</span>
       </div>
     </div>
   )

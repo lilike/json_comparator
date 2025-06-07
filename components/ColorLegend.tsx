@@ -18,24 +18,17 @@ export default function ColorLegend() {
   ]
 
   return (
-    <div className="bg-gray-800 rounded-lg p-6 shadow-xl mb-6">
-      <h3 className="text-lg font-semibold text-white mb-4">差异标记说明</h3>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        {legendItems.map((item, index) => (
-          <div key={index} className="flex items-center gap-3 group">
-            <div className={`w-4 h-4 rounded-full ${item.color} shadow-lg`}></div>
-            <div>
-              <div className="text-white font-medium">{item.label}</div>
-              <div className="text-xs text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity">
-                {item.description}
-              </div>
-            </div>
+    <div className="flex items-center gap-6">
+      {legendItems.map((item, index) => (
+        <div key={index} className="flex items-center gap-1 group relative">
+          <div className={`w-2 h-2 rounded-full ${item.color} shadow-sm`}></div>
+          <div className="text-white text-xs">{item.label}</div>
+          {/* 悬浮提示 */}
+          <div className="absolute top-full mt-1 bg-black/90 text-white text-xs rounded px-2 py-1 z-10 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+            {item.description}
           </div>
-        ))}
-      </div>
-      <div className="mt-4 text-xs text-gray-400 text-center">
-        💡 提示：将鼠标悬停在标记上可查看详细差异信息
-      </div>
+        </div>
+      ))}
     </div>
   )
 } 
