@@ -2,12 +2,12 @@ export default function ColorLegend() {
   const legendItems = [
     {
       color: 'bg-green-500',
-      label: '新增字段',
+      label: '右侧字段',
       description: '仅在右侧JSON中存在的字段'
     },
     {
       color: 'bg-red-500',
-      label: '删除字段',
+      label: '左侧字段',
       description: '仅在左侧JSON中存在的字段'
     },
     {
@@ -24,7 +24,7 @@ export default function ColorLegend() {
           <div className={`w-2 h-2 rounded-full ${item.color} shadow-sm`}></div>
           <div className="text-white text-xs">{item.label}</div>
           {/* 悬浮提示 */}
-          <div className="absolute top-full mt-1 bg-black/90 text-white text-xs rounded px-2 py-1 z-10 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+          <div className="absolute top-full mt-1 left-0 -translate-x-[100px] bg-black/90 text-white text-xs rounded px-2 py-1 z-10 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
             {item.description}
           </div>
         </div>
