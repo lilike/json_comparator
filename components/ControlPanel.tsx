@@ -90,6 +90,12 @@ export default function ControlPanel({
           </div>
         </div>
 
+        {/* 排序说明 - 放在按钮中间 */}
+        <div className="flex items-center gap-1 text-xs text-gray-400">
+          <Info size={10} />
+          <span>{getSortDescription(sortOption)}</span>
+        </div>
+
         {/* 比较按钮 */}
         <button
           onClick={onCompare}
@@ -108,12 +114,6 @@ export default function ControlPanel({
             </>
           )}
         </button>
-      </div>
-      
-      {/* 排序说明 - 移到底部作为提示 */}
-      <div className="flex items-center justify-center gap-1 mt-1 text-xs text-gray-400">
-        <Info size={10} />
-        <span>{getSortDescription(sortOption)}</span>
       </div>
     </div>
   )

@@ -259,8 +259,8 @@ export default function HomePage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 to-gray-800 flex flex-col">
-      {/* 页面头部 - 单行布局 */}
+    <div className="h-screen bg-gradient-to-br from-gray-900 to-gray-800 flex flex-col overflow-hidden">
+      {/* 页面头部 - 固定高度 */}
       <div className="flex-shrink-0 px-4 py-2">
         <div className="flex items-center justify-between">
           {/* 左侧：标题区域 */}
@@ -278,7 +278,7 @@ export default function HomePage() {
         </div>
       </div>
 
-      {/* 控制面板 - 超紧凑化 */}
+      {/* 控制面板 - 固定高度 */}
       <div className="flex-shrink-0 px-4 py-1">
         <ControlPanel 
           sortOption={sortOption}
@@ -291,13 +291,13 @@ export default function HomePage() {
         />
       </div>
 
-      {/* 主要内容区域 - 占据剩余空间 */}
-      <div className="flex-1 px-4 pb-4 min-h-0">
+      {/* 主要内容区域 - 占满剩余视口空间 */}
+      <div className="flex-1 px-4 min-h-0 overflow-hidden">
         {!showComparison ? (
           /* 编辑模式 */
           <div className="grid lg:grid-cols-2 grid-cols-1 gap-4 h-full">
             {/* 左侧JSON输入 */}
-            <div className="flex flex-col h-full">
+            <div className="flex flex-col h-full min-h-0">
               <div className="flex items-center justify-between mb-2 flex-shrink-0">
                 <h2 className="text-lg font-semibold text-white">JSON A</h2>
                 <div className="flex items-center gap-2">
@@ -344,7 +344,7 @@ export default function HomePage() {
             </div>
 
             {/* 右侧JSON输入 */}
-            <div className="flex flex-col h-full">
+            <div className="flex flex-col h-full min-h-0">
               <div className="flex items-center justify-between mb-2 flex-shrink-0">
                 <h2 className="text-lg font-semibold text-white">JSON B</h2>
                 <div className="flex items-center gap-2">
@@ -392,7 +392,7 @@ export default function HomePage() {
           </div>
         ) : (
           /* 比较模式 */
-          <div className="h-full flex flex-col">
+          <div className="h-full flex flex-col min-h-0">
             {/* 并排的JSON差异显示 */}
             <div className="flex-1 grid lg:grid-cols-2 gap-4 min-h-0">
               <JsonDiffViewer
@@ -410,7 +410,7 @@ export default function HomePage() {
             </div>
             
             {/* 返回编辑按钮 */}
-            <div className="text-center py-4 flex-shrink-0">
+            <div className="text-center py-2 flex-shrink-0">
               <button
                 onClick={() => setShowComparison(false)}
                 className="px-6 py-2 bg-gray-700 hover:bg-gray-600 text-white rounded-lg font-medium transition-colors"
@@ -422,8 +422,8 @@ export default function HomePage() {
         )}
       </div>
 
-      {/* 底部提示 - 紧凑化 */}
-      <div className="flex-shrink-0 px-4 pb-2">
+      {/* 底部提示 - 固定高度 */}
+      <div className="flex-shrink-0 px-4 py-1">
         <p className="text-gray-400 text-xs text-center">
           提示：支持自动格式化、智能排序和详细的差异标记
         </p>
