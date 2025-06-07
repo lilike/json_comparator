@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JSON格式化功能演示</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #1a1a1a;
+            color: #fff;
+        }
+        .demo-section {
+            background: #2a2a2a;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 10px;
+            border: 1px solid #444;
+        }
+        .demo-json {
+            background: #1e1e1e;
+            border: 1px solid #444;
+            border-radius: 5px;
+            padding: 15px;
+            font-family: 'Courier New', monospace;
+            white-space: pre-wrap;
+            overflow-x: auto;
+        }
+        .status {
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        .success { background: rgba(34, 197, 94, 0.2); border: 1px solid #22c55e; color: #22c55e; }
+        .error { background: rgba(239, 68, 68, 0.2); border: 1px solid #ef4444; color: #ef4444; }
+        .warning { background: rgba(245, 158, 11, 0.2); border: 1px solid #f59e0b; color: #f59e0b; }
+        h1, h2 { color: #60a5fa; }
+    </style>
+</head>
+<body>
+    <h1>🔧 JSON智能比较工具 - 第二阶段功能演示</h1>
+    
+    <div class="demo-section">
+        <h2>✅ 已实现的核心功能</h2>
+        <ul>
+            <li><strong>自动JSON格式化</strong> - 美化压缩的JSON代码</li>
+            <li><strong>JSON压缩功能</strong> - 移除多余的空格和换行</li>
+            <li><strong>智能错误检测</strong> - 实时验证JSON语法</li>
+            <li><strong>状态可视化</strong> - 颜色边框显示JSON状态</li>
+            <li><strong>友好错误提示</strong> - 详细的错误信息和建议</li>
+            <li><strong>一键格式化</strong> - 同时格式化两边的JSON</li>
+        </ul>
+    </div>
+
+    <div class="demo-section">
+        <h2>📝 测试用例1：压缩JSON自动格式化</h2>
+        <p>原始压缩JSON：</p>
+        <div class="demo-json">{"payDt":"202506","dyAccountIds":["全选"],"bpRel":2,"sortTyp":0,"drTagTyp":1,"drTagCds":["空"],"institutionNams":["空"],"orderOrTarget":5,"indexs":["AMV","不保量坑位费"],"productCds":["全选"],"drUids":["全选"],"dateTyp":"付款日期","costCaliberCd":"1","rondaScenes":["全选"],"businessClasses":["中腰达人"],"mediaTyps":["全选"],"bigGroupCds":["全选"],"smallGroupCds":["O10041017"],"bdCds":["全选"],"liveTyps":["全选"],"productTags":["全选"],"productTyps":["全选"],"pageNumber":1}</div>
+        
+        <div class="status success">✅ JSON格式正确 - 可以格式化</div>
+        
+        <p>格式化后效果：</p>
+        <div class="demo-json">{
+  "payDt": "202506",
+  "dyAccountIds": [
+    "全选"
+  ],
+  "bpRel": 2,
+  "sortTyp": 0,
+  "drTagTyp": 1,
+  "drTagCds": [
+    "空"
+  ],
+  "institutionNams": [
+    "空"
+  ],
+  "orderOrTarget": 5,
+  "indexs": [
+    "AMV",
+    "不保量坑位费"
+  ],
+  "productCds": [
+    "全选"
+  ],
+  "drUids": [
+    "全选"
+  ],
+  "dateTyp": "付款日期",
+  "costCaliberCd": "1",
+  "rondaScenes": [
+    "全选"
+  ],
+  "businessClasses": [
+    "中腰达人"
+  ],
+  "mediaTyps": [
+    "全选"
+  ],
+  "bigGroupCds": [
+    "全选"
+  ],
+  "smallGroupCds": [
+    "O10041017"
+  ],
+  "bdCds": [
+    "全选"
+  ],
+  "liveTyps": [
+    "全选"
+  ],
+  "productTags": [
+    "全选"
+  ],
+  "productTyps": [
+    "全选"
+  ],
+  "pageNumber": 1
+}</div>
+    </div>
+
+    <div class="demo-section">
+        <h2>❌ 测试用例2：错误JSON处理</h2>
+        <p>错误的JSON示例：</p>
+        <div class="demo-json">{"name": "test", "value": 123, "missing_quote: "error"}</div>
+        
+        <div class="status error">❌ JSON格式错误：缺少必要的符号</div>
+        <p>系统会自动检测并提示用户具体的错误位置和原因。</p>
+    </div>
+
+    <div class="demo-section">
+        <h2>⚡ 测试用例3：一键格式化功能</h2>
+        <p>用户可以点击"一键格式化"按钮同时格式化左右两边的JSON，极大提升使用效率。</p>
+        <div class="status success">✅ 支持批量操作，节省用户时间</div>
+    </div>
+
+    <div class="demo-section">
+        <h2>🎨 用户体验特色</h2>
+        <ul>
+            <li><strong>实时状态反馈</strong>：边框颜色实时显示JSON状态（绿色=正确，黄色=语法错误，红色=系统错误）</li>
+            <li><strong>智能按钮状态</strong>：按钮会根据内容状态自动启用/禁用</li>
+            <li><strong>加载动画</strong>：格式化过程中显示优雅的加载动画</li>
+            <li><strong>统计信息</strong>：显示行数和字符数统计</li>
+            <li><strong>错误清除</strong>：用户开始编辑时自动清除错误状态</li>
+        </ul>
+    </div>
+
+    <div class="demo-section">
+        <h2>🔜 下一阶段预告</h2>
+        <p><strong>第三阶段 - 字段排序功能</strong></p>
+        <ul>
+            <li>字母排序：按键名字母顺序排列</li>
+            <li>类型排序：按数据类型分组排列</li>
+            <li>原始顺序：保持JSON原有的字段顺序</li>
+        </ul>
+    </div>
+
+    <div style="text-align: center; margin-top: 40px; color: #888;">
+        <p>🚀 访问 <strong>http://localhost:3000</strong> 查看实际运行效果</p>
+    </div>
+</body>
+</html> 

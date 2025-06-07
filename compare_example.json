@@ -1,0 +1,55 @@
+{
+    "bpRel": 2,
+    "payDt": "202506",
+    "empCd": "80558419",
+    "drTagCds": [
+        "空"
+    ],
+    "dateTyp": "付款日期",
+    "liveTyps": [
+        "全部"
+    ],
+    "institutionNams": [
+        "空"
+    ],
+    "businessClasses": [
+        "\"中腰达人\" "
+    ],
+    "rondaScenes": [
+        "全选"
+    ],
+    "dyAccountNam": "全选",
+    "dyAccountIds": [
+        "全选"
+    ],
+    "drUids": [
+        "全选"
+    ],
+    "mediaTyps": [
+        "全选"
+    ],
+    "bdCds": [
+        "全选"
+    ],
+    "bigGroupCds": [
+        "全选"
+    ],
+    "smallGroupCds": [
+        "全选"
+    ],
+    "productCds": [
+        "全选"
+    ],
+    "productTags": [
+        "全选"
+    ],
+    "productTyps": [
+        "全选"
+    ],
+    "costCaliberCd": "1",
+    "drTagTyp": 1,
+    "orderOrTarget": 5
+}
+
+
+{"payDt":"202506","dyAccountIds":["全选"],"bpRel":2,"sortTyp":0,"drTagTyp":1,"drTagCds":["空"],"institutionNams":["空"],"orderOrTarget":5,"indexs":["AMV","不保量坑位费"],"productCds":["全选"],"drUids":["全选"],"dateTyp":"付款日期","costCaliberCd":"1","rondaScenes":["全选"],"businessClasses":["中腰达人"],"mediaTyps":["全选"],"bigGroupCds":["全选"],"smallGroupCds":["O10041017"],"bdCds":["全选"],"liveTyps":["全选"],"productTags":["全选"],"productTyps":["全选"],"pageNumber":1}

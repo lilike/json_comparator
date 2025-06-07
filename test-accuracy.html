@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JSON差异检测准确性测试</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #1a1a1a;
+            color: #fff;
+        }
+        .test-section {
+            background: #2a2a2a;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 10px;
+            border: 1px solid #444;
+        }
+        .test-json {
+            background: #1e1e1e;
+            border: 1px solid #444;
+            border-radius: 5px;
+            padding: 15px;
+            font-family: 'Courier New', monospace;
+            white-space: pre-wrap;
+            overflow-x: auto;
+            margin: 10px 0;
+        }
+        .comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 20px 0;
+        }
+        .expected-result {
+            background: #2a4a2a;
+            border: 1px solid #4a8a4a;
+            border-radius: 5px;
+            padding: 15px;
+            margin: 10px 0;
+        }
+        .test-pass { color: #22c55e; }
+        .test-fail { color: #ef4444; }
+        h1, h2 { color: #60a5fa; }
+        h3 { color: #f59e0b; }
+        @media (max-width: 768px) {
+            .comparison { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <h1>🎯 JSON差异检测准确性测试</h1>
+    
+    <div class="test-section">
+        <h2>测试目标</h2>
+        <p>验证新的精确匹配算法是否能够：</p>
+        <ul>
+            <li>✅ <strong>消除误报</strong> - 不标记不相关的行</li>
+            <li>✅ <strong>避免漏报</strong> - 正确标记所有差异行</li>
+            <li>✅ <strong>处理复杂结构</strong> - 正确处理嵌套对象和数组</li>
+            <li>✅ <strong>区分同名键</strong> - 在不同层级的同名键不会混淆</li>
+        </ul>
+    </div>
+
+    <div class="test-section">
+        <h2>🧪 测试用例1：基础差异检测</h2>
+        
+        <div class="comparison">
+            <div>
+                <h3>JSON A (左侧)</h3>
+                <div class="test-json">{
+  "name": "张三",
+  "age": 25,
+  "city": "北京",
+  "status": "active"
+}</div>
+            </div>
+            
+            <div>
+                <h3>JSON B (右侧)</h3>
+                <div class="test-json">{
+  "name": "李四",
+  "age": 30,
+  "city": "北京",
+  "status": "inactive"
+}</div>
+            </div>
+        </div>
+        
+        <div class="expected-result">
+            <h3>预期结果</h3>
+            <p><strong>应该标记的行：</strong></p>
+            <ul>
+                <li>第2行：name字段（值不同）</li>
+                <li>第3行：age字段（值不同）</li>
+                <li>第5行：status字段（值不同）</li>
+            </ul>
+            <p><strong>不应该标记的行：</strong></p>
+            <ul>
+                <li>第1行：对象开始符号</li>
+                <li>第4行：city字段（值相同）</li>
+                <li>第6行：对象结束符号</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2>🧪 测试用例2：嵌套对象差异</h2>
+        
+        <div class="comparison">
+            <div>
+                <h3>JSON A (左侧)</h3>
+                <div class="test-json">{
+  "user": {
+    "name": "张三",
+    "profile": {
+      "age": 25,
+      "city": "北京"
+    }
+  },
+  "config": {
+    "theme": "dark"
+  }
+}</div>
+            </div>
+            
+            <div>
+                <h3>JSON B (右侧)</h3>
+                <div class="test-json">{
+  "user": {
+    "name": "李四",
+    "profile": {
+      "age": 25,
+      "city": "上海"
+    }
+  },
+  "config": {
+    "theme": "dark"
+  }
+}</div>
+            </div>
+        </div>
+        
+        <div class="expected-result">
+            <h3>预期结果</h3>
+            <p><strong>应该标记的行：</strong></p>
+            <ul>
+                <li>第3行：user.name字段（值不同）</li>
+                <li>第6行：user.profile.city字段（值不同）</li>
+            </ul>
+            <p><strong>不应该标记的行：</strong></p>
+            <ul>
+                <li>第5行：user.profile.age字段（值相同）</li>
+                <li>第10行：config.theme字段（值相同）</li>
+                <li>其他结构行（大括号等）</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2>🧪 测试用例3：数组差异处理</h2>
+        
+        <div class="comparison">
+            <div>
+                <h3>JSON A (左侧)</h3>
+                <div class="test-json">{
+  "items": [
+    "apple",
+    "banana",
+    "orange"
+  ],
+  "tags": ["fruit", "fresh"]
+}</div>
+            </div>
+            
+            <div>
+                <h3>JSON B (右侧)</h3>
+                <div class="test-json">{
+  "items": [
+    "apple",
+    "grape",
+    "orange"
+  ],
+  "tags": ["fruit", "organic"]
+}</div>
+            </div>
+        </div>
+        
+        <div class="expected-result">
+            <h3>预期结果</h3>
+            <p><strong>应该标记的行：</strong></p>
+            <ul>
+                <li>第4行：items[1]元素（"banana" → "grape"）</li>
+                <li>第7行：tags[1]元素（"fresh" → "organic"）</li>
+            </ul>
+            <p><strong>不应该标记的行：</strong></p>
+            <ul>
+                <li>第3行：items[0]元素（值相同）</li>
+                <li>第5行：items[2]元素（值相同）</li>
+                <li>第7行：tags[0]元素（值相同）</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2>🧪 测试用例4：同名键混淆测试</h2>
+        
+        <div class="comparison">
+            <div>
+                <h3>JSON A (左侧)</h3>
+                <div class="test-json">{
+  "name": "公司A",
+  "employee": {
+    "name": "张三",
+    "department": {
+      "name": "技术部"
+    }
+  }
+}</div>
+            </div>
+            
+            <div>
+                <h3>JSON B (右侧)</h3>
+                <div class="test-json">{
+  "name": "公司A",
+  "employee": {
+    "name": "李四",
+    "department": {
+      "name": "技术部"
+    }
+  }
+}</div>
+            </div>
+        </div>
+        
+        <div class="expected-result">
+            <h3>预期结果</h3>
+            <p><strong>应该标记的行：</strong></p>
+            <ul>
+                <li>第4行：employee.name字段（"张三" → "李四"）</li>
+            </ul>
+            <p><strong>不应该标记的行：</strong></p>
+            <ul>
+                <li>第2行：根级name字段（值相同）</li>
+                <li>第6行：department.name字段（值相同）</li>
+            </ul>
+            <p><strong>关键测试点：</strong> 确保算法能够区分不同层级的同名字段</p>
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2>🧪 测试用例5：新增删除字段</h2>
+        
+        <div class="comparison">
+            <div>
+                <h3>JSON A (左侧)</h3>
+                <div class="test-json">{
+  "id": 1,
+  "name": "测试",
+  "oldField": "将被删除",
+  "common": "相同值"
+}</div>
+            </div>
+            
+            <div>
+                <h3>JSON B (右侧)</h3>
+                <div class="test-json">{
+  "id": 1,
+  "name": "测试",
+  "newField": "新增字段",
+  "common": "相同值"
+}</div>
+            </div>
+        </div>
+        
+        <div class="expected-result">
+            <h3>预期结果</h3>
+            <p><strong>左侧应该标记的行：</strong></p>
+            <ul>
+                <li>第4行：oldField字段（红色，删除）</li>
+            </ul>
+            <p><strong>右侧应该标记的行：</strong></p>
+            <ul>
+                <li>第4行：newField字段（绿色，新增）</li>
+            </ul>
+            <p><strong>不应该标记的行：</strong></p>
+            <ul>
+                <li>第2行：id字段（值相同）</li>
+                <li>第3行：name字段（值相同）</li>
+                <li>第5行：common字段（值相同）</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2>📋 测试检查清单</h2>
+        <p>使用以上测试用例验证算法准确性：</p>
+        <ol>
+            <li><strong>输入测试数据</strong> - 将左右两侧的JSON粘贴到工具中</li>
+            <li><strong>执行比较</strong> - 点击"开始比较"按钮</li>
+            <li><strong>检查标记</strong> - 验证标记的行是否与预期一致</li>
+            <li><strong>确认无误报</strong> - 确保没有标记不应该标记的行</li>
+            <li><strong>确认无漏报</strong> - 确保所有差异都被正确标记</li>
+        </ol>
+    </div>
+
+    <div class="test-section">
+        <h2>🚀 算法优化要点</h2>
+        <ul>
+            <li><strong>精确路径匹配</strong> - 基于JSON路径进行精确定位</li>
+            <li><strong>键值对验证</strong> - 同时验证键名和值内容</li>
+            <li><strong>层级区分</strong> - 正确处理不同层级的同名字段</li>
+            <li><strong>类型安全</strong> - 确保值的类型匹配检查</li>
+            <li><strong>边界情况</strong> - 处理空值、数组、嵌套结构等</li>
+        </ul>
+    </div>
+
+    <div style="text-align: center; margin-top: 40px; color: #888;">
+        <p>🎯 访问 <strong>http://localhost:3000</strong> 使用这些测试用例验证准确性</p>
+        <p>💡 如果发现任何误报或漏报，请立即反馈以便优化算法</p>
+    </div>
+</body>
+</html> 
