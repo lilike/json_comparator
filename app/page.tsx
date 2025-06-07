@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { Settings, Copy, Minimize2, ArrowUpDown } from 'lucide-react'
 import JsonInput from '@/components/JsonInput'
 import ControlPanel from '@/components/ControlPanel'
@@ -8,7 +8,7 @@ import ColorLegend from '@/components/ColorLegend'
 import JsonDiffViewer from '@/components/JsonDiffViewer'
 import { formatJson, minifyJson } from '@/utils/jsonFormatter'
 import { sortJson, SortOption } from '@/utils/jsonSorter'
-import { compareJson, DiffResult } from '@/utils/jsonDiffer'
+import { compareJson, DiffResult } from '@/utils/jsonDiffAdapter'
 
 export default function HomePage() {
   const [leftJson, setLeftJson] = useState<string>('')
@@ -28,26 +28,7 @@ export default function HomePage() {
   const [isComparing, setIsComparing] = useState<boolean>(false)
   const [showComparison, setShowComparison] = useState<boolean>(false)
 
-  // 自动排序：当排序选项改变时，自动应用到有内容的JSON
-  useEffect(() => {
-    const applySort = async () => {
-      const promises: Promise<void>[] = []
-      
-      if (leftJson.trim() && sortOption !== 'none') {
-        promises.push(handleSort('left', sortOption))
-      }
-      
-      if (rightJson.trim() && sortOption !== 'none') {
-        promises.push(handleSort('right', sortOption))
-      }
 
-      if (promises.length > 0) {
-        await Promise.all(promises)
-      }
-    }
-
-    applySort()
-  }, [sortOption]) // 依赖排序选项变化
 
   const handleCompare = async () => {
     // 检查输入
@@ -129,7 +110,7 @@ export default function HomePage() {
   }
 
   // 排序处理函数
-  const handleSort = async (side: 'left' | 'right', sortType: SortOption) => {
+  const handleSort = useCallback(async (side: 'left' | 'right', sortType: SortOption) => {
     const isLeft = side === 'left'
     const currentJson = isLeft ? leftJson : rightJson
     const setJson = isLeft ? setLeftJson : setRightJson
@@ -164,7 +145,28 @@ export default function HomePage() {
     } finally {
       setSorting(false)
     }
-  }
+  }, [leftJson, rightJson, setLeftJson, setRightJson, setLeftError, setRightError, setLeftSorting, setRightSorting])
+
+  // 自动排序：当排序选项改变时，自动应用到有内容的JSON
+  useEffect(() => {
+    const applySort = async () => {
+      const promises: Promise<void>[] = []
+      
+      if (leftJson.trim() && sortOption !== 'none') {
+        promises.push(handleSort('left', sortOption))
+      }
+      
+      if (rightJson.trim() && sortOption !== 'none') {
+        promises.push(handleSort('right', sortOption))
+      }
+
+      if (promises.length > 0) {
+        await Promise.all(promises)
+      }
+    }
+
+    applySort()
+  }, [sortOption, leftJson, rightJson, handleSort]) // 依赖排序选项变化
 
   // 手动排序按钮处理
   const handleManualSort = async (side: 'left' | 'right') => {

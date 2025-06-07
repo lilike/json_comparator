@@ -1,6 +1,6 @@
 import { useState } from 'react'
-import { ChevronDown, ChevronRight, Eye, Info } from 'lucide-react'
-import { DiffItem, DiffType, getDiffColorClass, getDiffIcon, getDiffStats } from '@/utils/jsonDiffer'
+import { ChevronDown, ChevronRight, Info } from 'lucide-react'
+import { DiffItem, DiffType, getDiffColorClass, getDiffIcon, getDiffStats } from '@/utils/jsonDiffAdapter'
 
 interface DiffViewProps {
   diffs: DiffItem[]
@@ -10,30 +10,29 @@ interface DiffViewProps {
 
 export default function DiffView({ diffs, leftJson, rightJson }: DiffViewProps) {
   const [expandedItems, setExpandedItems] = useState<Set<string>>(new Set())
-  const [showOnlyDiffs, setShowOnlyDiffs] = useState<boolean>(true)
-  
+
   const stats = getDiffStats(diffs)
-  
-  // 切换展开状态
-  const toggleExpand = (path: string) => {
+
+  const toggleExpand = (key: string) => {
     const newExpanded = new Set(expandedItems)
-    if (newExpanded.has(path)) {
-      newExpanded.delete(path)
+    if (newExpanded.has(key)) {
+      newExpanded.delete(key)
     } else {
-      newExpanded.add(path)
+      newExpanded.add(key)
     }
     setExpandedItems(newExpanded)
   }
 
-  // 格式化路径显示
-  const formatPath = (path: string[]): string => {
-    if (path.length === 0) return 'root'
-    return path.map(p => isNaN(Number(p)) ? p : `[${p}]`).join('.')
+  const formatPath = (path: string): string => {
+    if (!path) return 'root'
+    return path.replace(/\./g, ' → ')
   }
 
-  // 渲染差异项
+  // 现在不再有UNCHANGED类型，所以直接使用所有差异
+  const filteredDiffs = diffs
+
   const renderDiffItem = (diff: DiffItem, index: number) => {
-    const pathKey = diff.path.join('.')
+    const pathKey = diff.path || 'root'
     const isExpanded = expandedItems.has(pathKey)
     const colorClass = getDiffColorClass(diff.type)
     const icon = getDiffIcon(diff.type)
@@ -77,7 +76,7 @@ export default function DiffView({ diffs, leftJson, rightJson }: DiffViewProps) 
                 <div>
                   <div className="text-xs font-medium mb-1 text-red-400">左侧 (A)</div>
                   <div className="bg-black/20 p-2 rounded text-xs font-mono">
-                    <div className="text-gray-400">类型: {diff.leftType}</div>
+                    <div className="text-gray-400">类型: {typeof diff.leftValue}</div>
                     <div className="mt-1 break-all">
                       {JSON.stringify(diff.leftValue, null, 2)}
                     </div>
@@ -89,7 +88,7 @@ export default function DiffView({ diffs, leftJson, rightJson }: DiffViewProps) 
                 <div>
                   <div className="text-xs font-medium mb-1 text-green-400">右侧 (B)</div>
                   <div className="bg-black/20 p-2 rounded text-xs font-mono">
-                    <div className="text-gray-400">类型: {diff.rightType}</div>
+                    <div className="text-gray-400">类型: {typeof diff.rightValue}</div>
                     <div className="mt-1 break-all">
                       {JSON.stringify(diff.rightValue, null, 2)}
                     </div>
@@ -117,49 +116,46 @@ export default function DiffView({ diffs, leftJson, rightJson }: DiffViewProps) 
   }
 
   return (
-    <div className="bg-gray-800 rounded-lg p-6">
-      {/* 差异统计 */}
-      <div className="mb-6">
-        <div className="flex items-center justify-between mb-4">
-          <h3 className="text-lg font-semibold text-white">差异检测结果</h3>
-          <button
-            onClick={() => setShowOnlyDiffs(!showOnlyDiffs)}
-            className="flex items-center gap-2 px-3 py-1 bg-gray-700 hover:bg-gray-600 text-white rounded-md text-sm transition-colors"
-          >
-            <Eye size={14} />
-            {showOnlyDiffs ? '显示全部' : '仅显示差异'}
-          </button>
-        </div>
-
-        <div className="grid grid-cols-3 gap-4 mb-4">
-          <div className="bg-green-500/20 border border-green-500 rounded-lg p-3 text-center">
-            <div className="text-green-400 text-2xl font-bold">{stats.added}</div>
-            <div className="text-green-400 text-sm">新增</div>
+    <div className="bg-gray-800 rounded-lg overflow-hidden">
+      {/* 统计信息和控制面板 */}
+      <div className="bg-gray-700 px-4 py-3 border-b border-gray-600">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <div className="text-white font-medium">差异摘要</div>
+            <div className="flex items-center gap-2 text-xs">
+              {stats.added > 0 && (
+                <span className="bg-green-500/20 text-green-400 px-2 py-1 rounded">
+                  +{stats.added} 新增
+                </span>
+              )}
+              {stats.removed > 0 && (
+                <span className="bg-red-500/20 text-red-400 px-2 py-1 rounded">
+                  -{stats.removed} 删除
+                </span>
+              )}
+              {stats.changed > 0 && (
+                <span className="bg-yellow-500/20 text-yellow-400 px-2 py-1 rounded">
+                  ~{stats.changed} 修改
+                </span>
+              )}
+            </div>
           </div>
-          <div className="bg-red-500/20 border border-red-500 rounded-lg p-3 text-center">
-            <div className="text-red-400 text-2xl font-bold">{stats.removed}</div>
-            <div className="text-red-400 text-sm">删除</div>
-          </div>
-          <div className="bg-yellow-500/20 border border-yellow-500 rounded-lg p-3 text-center">
-            <div className="text-yellow-400 text-2xl font-bold">{stats.different}</div>
-            <div className="text-yellow-400 text-sm">不同</div>
-          </div>
-        </div>
-
-        <div className="flex items-center gap-2 text-sm text-gray-400">
-          <Info size={14} />
-          <span>共发现 {stats.total} 处差异，点击展开查看详情</span>
         </div>
       </div>
 
       {/* 差异列表 */}
-      <div className="space-y-3 max-h-96 overflow-y-auto">
-        {diffs.map((diff, index) => renderDiffItem(diff, index))}
-      </div>
-
-      {/* 操作提示 */}
-      <div className="mt-4 p-3 bg-gray-700/50 rounded-lg text-sm text-gray-400">
-        💡 提示：点击差异项可查看详细对比信息。不同颜色代表不同类型的差异。
+      <div className="p-4 space-y-3 max-h-96 overflow-auto">
+        {filteredDiffs.length === 0 ? (
+          <div className="text-center text-gray-400 py-8">
+            <Info size={48} className="mx-auto mb-2 opacity-50" />
+            <div>没有要显示的差异项</div>
+            <div className="text-xs mt-1">
+              只显示有差异的字段
+            </div>
+          </div>
+        ) : (
+          filteredDiffs.map(renderDiffItem)
+        )}
       </div>
     </div>
   )
