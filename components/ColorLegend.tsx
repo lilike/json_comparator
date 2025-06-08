@@ -24,7 +24,7 @@ export default function ColorLegend() {
           <div className={`w-2 h-2 rounded-full ${item.color} shadow-sm`}></div>
           <div className="text-white text-xs">{item.label}</div>
           {/* 悬浮提示 */}
-          <div className="absolute top-full mt-1 left-0 -translate-x-[100px] bg-black/90 text-white text-xs rounded px-2 py-1 z-10 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+          <div className="absolute top-full mt-1 left-0 -translate-x-[400px] bg-black/90 text-white text-xs rounded px-2 py-1 z-10 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
             {item.description}
           </div>
         </div>

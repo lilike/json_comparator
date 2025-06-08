@@ -324,7 +324,7 @@ export default function JsonDiffViewer({ json, diffs, side, label }: JsonDiffVie
           </div>
           
           {/* 悬浮提示 - 增强CHANGED类型的提示信息 */}
-          <div className="absolute left-0 top-full mt-1 bg-black/90 text-white text-xs rounded px-2 py-1 z-10 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap max-w-md">
+          <div className="absolute left-0 -translate-x-[-300px] top-full mt-1 bg-black/90 text-white text-xs rounded px-2 py-1 z-10 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap max-w-md">
             {lineDiffs.map((diff, index) => (
               <div key={index} className="mb-1">
                 <div className="font-medium">{diff.path}</div>
