@@ -50,10 +50,8 @@ export default function HomePage() {
       
       if (result.success) {
         console.log('比较成功，结果:', result)
-        console.log('leftFormatted preview:', result.leftFormatted?.substring(0, 100))
-        console.log('rightFormatted preview:', result.rightFormatted?.substring(0, 100))
-        console.log('原始leftJson preview:', leftJson.substring(0, 100))
-        console.log('原始rightJson preview:', rightJson.substring(0, 100))
+        console.log('解析后的差异数组:', result.diffs)
+        console.log('原始差异数据:', result.rawDiff)
         setCompareResult(result)
         setShowComparison(true)
         // 清除错误状态

@@ -35,6 +35,19 @@ function matchDiffsToLines(
     
     // 解析路径，区分普通字段和数组索引
     const parsePathInfo = (path: string) => {
+      // 处理顶层数组的特殊情况，如 "root[0]"
+      if (path.startsWith('root[') && path.endsWith(']')) {
+        const indexMatch = path.match(/^root\[(\d+)\]$/)
+        if (indexMatch) {
+          return {
+            isArrayIndex: true,
+            fieldName: 'root',
+            index: parseInt(indexMatch[1]),
+            fullPath: path
+          }
+        }
+      }
+      
       const parts = path.split('.')
       const lastPart = parts[parts.length - 1]
       
@@ -95,10 +108,31 @@ function matchDiffsToLines(
       
       // 1. 键名匹配 - 最高优先级
       if (pathInfo.isArrayIndex) {
-        // 对于数组索引，匹配数组字段名
-        const arrayFieldPattern = `"${pathInfo.fieldName}"\\s*:\\s*\\[`
-        if (new RegExp(arrayFieldPattern).test(line)) {
-          matchScore += 100 // 数组字段匹配得分最高
+        // 特殊处理顶层数组
+        if (pathInfo.fieldName === 'root') {
+          // 对于顶层数组，直接根据数组索引进行匹配
+          // 由于这是顶层数组，我们需要找到对应的数组元素
+          const targetValue = (() => {
+            if (diff.type === DiffType.ADDED) return diff.rightValue
+            if (diff.type === DiffType.REMOVED) return diff.leftValue
+            if (diff.type === DiffType.CHANGED) {
+              return side === 'left' ? diff.leftValue : diff.rightValue
+            }
+            return undefined
+          })()
+          
+          if (targetValue !== undefined) {
+            const valueStr = JSON.stringify(targetValue)
+            if (line.includes(valueStr)) {
+              matchScore += 100 // 直接值匹配得分最高
+            }
+          }
+        } else {
+          // 对于普通数组索引，匹配数组字段名
+          const arrayFieldPattern = `"${pathInfo.fieldName}"\\s*:\\s*\\[`
+          if (new RegExp(arrayFieldPattern).test(line)) {
+            matchScore += 100 // 数组字段匹配得分最高
+          }
         }
       } else {
         // 对于普通字段，匹配键名
@@ -255,6 +289,18 @@ export default function JsonDiffViewer({ json, diffs, side, label }: JsonDiffVie
     
     // 解析路径，区分普通字段和数组索引
     const parseFieldFromPath = (path: string) => {
+      // 处理顶层数组的特殊情况，如 "root[0]"
+      if (path.startsWith('root[') && path.endsWith(']')) {
+        const indexMatch = path.match(/^root\[(\d+)\]$/)
+        if (indexMatch) {
+          return {
+            isArrayIndex: true,
+            fieldName: 'root',
+            index: parseInt(indexMatch[1])
+          }
+        }
+      }
+      
       const parts = path.split('.')
       const lastPart = parts[parts.length - 1]
       
@@ -281,16 +327,22 @@ export default function JsonDiffViewer({ json, diffs, side, label }: JsonDiffVie
         const fieldInfo = parseFieldFromPath(relevantDiff.path)
         
         if (fieldInfo.isArrayIndex) {
-          // 对于数组元素，尝试在原内容中找到并替换对应位置的值
-          const fieldPattern = `"${fieldInfo.fieldName}"\\s*:\\s*\\[`
-          const fieldRegex = new RegExp(fieldPattern)
-          
-          if (fieldRegex.test(content)) {
-            // 保持原有的显示方式，不做替换
-            displayContent = content
+          // 特殊处理顶层数组
+          if (fieldInfo.fieldName === 'root') {
+            // 对于顶层数组，直接显示值
+            displayContent = `${JSON.stringify(targetValue)}`
           } else {
-            // 如果找不到匹配的数组字段，显示简单格式
-            displayContent = `    "${fieldInfo.fieldName}[${fieldInfo.index}]": ${JSON.stringify(targetValue)}`
+            // 对于普通数组元素，尝试在原内容中找到并替换对应位置的值
+            const fieldPattern = `"${fieldInfo.fieldName}"\\s*:\\s*\\[`
+            const fieldRegex = new RegExp(fieldPattern)
+            
+            if (fieldRegex.test(content)) {
+              // 保持原有的显示方式，不做替换
+              displayContent = content
+            } else {
+              // 如果找不到匹配的数组字段，显示简单格式
+              displayContent = `    "${fieldInfo.fieldName}[${fieldInfo.index}]": ${JSON.stringify(targetValue)}`
+            }
           }
         } else {
           // 普通对象属性

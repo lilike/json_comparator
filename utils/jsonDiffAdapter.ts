@@ -90,11 +90,24 @@ const parseDiffResult = (
   console.log('parseDiffResult called with:', {
     diffResult,
     path,
-    diffResultKeys: diffResult ? Object.keys(diffResult) : null
+    diffResultKeys: diffResult ? Object.keys(diffResult) : null,
+    isArray: Array.isArray(diffResult)
   })
   
-  if (!diffResult || typeof diffResult !== 'object') {
-    console.log('Early return: diffResult is null or not object')
+  if (!diffResult) {
+    console.log('Early return: diffResult is null')
+    return diffs
+  }
+  
+  // 特殊处理：如果顶层 diffResult 就是数组，说明比较的是数组类型
+  if (Array.isArray(diffResult)) {
+    console.log('Top-level array diff detected, calling parseArrayDiff')
+    parseArrayDiff(diffResult, path || 'root', diffs)
+    return diffs
+  }
+  
+  if (typeof diffResult !== 'object') {
+    console.log('Early return: diffResult is not object')
     return diffs
   }
   
@@ -351,19 +364,15 @@ export const compareJson = (leftJson: string, rightJson: string): DiffResult => 
     const diffs = rawDiff ? parseDiffResult(rawDiff, leftParsed, rightParsed) : []
     console.log('diffs', diffs)
     
-    // 特殊调试：检查解析后bdCds相关的差异
-    const bdCdsDiffs = diffs.filter(diff => diff.path.includes('bdCds') || diff.path.includes('Cds'))
-    if (bdCdsDiffs.length > 0) {
-      console.log('解析后的bdCds相关差异:', bdCdsDiffs)
-    }
+
 
     return {
       success: true,
       diffs: diffs,
       leftParsed,
       rightParsed,
-      leftFormatted: leftJson, // 直接使用原始的用户输入字符串
-      rightFormatted: rightJson, // 直接使用原始的用户输入字符串
+      leftFormatted: JSON.stringify(leftParsed, null, 2), // 格式化后的JSON字符串
+      rightFormatted: JSON.stringify(rightParsed, null, 2), // 格式化后的JSON字符串
       rawDiff
     }
   } catch (error) {
