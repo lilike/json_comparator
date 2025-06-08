@@ -1,0 +1,78 @@
+{
+  "meta": {
+    "title": "JSON智能比较工具",
+    "description": "解决格式化、排序、差异标记等问题的专业JSON比较工具"
+  },
+  "nav": {
+    "languageSwitch": "语言",
+    "english": "English",
+    "chinese": "中文"
+  },
+  "buttons": {
+    "compare": "比较JSON",
+    "formatAll": "一键格式化",
+    "loadExample": "加载示例数据",
+    "format": "格式化",
+    "minify": "压缩",
+    "sort": "排序",
+    "copy": "复制",
+    "backToEdit": "返回编辑模式"
+  },
+  "sorting": {
+    "label": "排序方式",
+    "original": "原始顺序",
+    "alphabetical": "字母排序",
+    "byType": "类型排序",
+    "descriptions": {
+      "none": "保持JSON原有的字段顺序",
+      "alphabetical": "按字段名称的字母顺序排列",
+      "type": "按数据类型分组排列（null < boolean < number < string < array < object）"
+    }
+  },
+  "status": {
+    "lines": "行",
+    "characters": "字符",
+    "comparing": "比较中...",
+    "formatting": "格式化中...",
+    "sorting": "排序中...",
+    "valid": "格式正确"
+  },
+  "errors": {
+    "enterLeftJson": "请先输入左侧JSON",
+    "enterRightJson": "请先输入右侧JSON",
+    "invalidJsonFormat": "JSON格式不正确，请检查语法",
+    "enterJsonContent": "请先输入JSON内容",
+    "formatFailed": "格式化失败",
+    "sortFailed": "排序失败",
+    "compareFailed": "比较失败",
+    "formatError": "格式化过程中发生错误",
+    "sortError": "排序过程中发生错误",
+    "compareError": "比较过程中发生错误",
+    "leftJsonError": "左侧JSON错误",
+    "rightJsonError": "右侧JSON错误",
+    "emptyContent": "JSON内容不能为空",
+    "jsonParseError": "JSON格式错误"
+  },
+  "legend": {
+    "title": "差异图例",
+    "added": "右侧字段",
+    "added_desc": "仅在右侧JSON中存在的字段",
+    "removed": "左侧字段",
+    "removed_desc": "仅在左侧JSON中存在的字段",
+    "modified": "不同字段",
+    "modified_desc": "字段存在但值或类型不同",
+    "unchanged": "未变更"
+  },
+  "placeholders": {
+    "leftJson": "在此输入或粘贴第一个JSON...",
+    "rightJson": "在此输入或粘贴第二个JSON..."
+  },
+  "messages": {
+    "copied": "已复制到剪贴板！",
+    "exampleLoaded": "示例数据加载成功",
+    "compareSuccess": "JSON比较完成"
+  },
+  "footer": {
+    "tip": "提示：支持自动格式化、智能排序和详细的差异标记"
+  }
+} 

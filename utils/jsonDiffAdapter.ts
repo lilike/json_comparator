@@ -86,48 +86,35 @@ const parseDiffResult = (
   path: string = ''
 ): DiffItem[] => {
   const diffs: DiffItem[] = []
-  
-  console.log('parseDiffResult called with:', {
-    diffResult,
-    path,
-    diffResultKeys: diffResult ? Object.keys(diffResult) : null,
-    isArray: Array.isArray(diffResult)
-  })
+
   
   if (!diffResult) {
-    console.log('Early return: diffResult is null')
     return diffs
   }
   
   // 特殊处理：如果顶层 diffResult 就是数组，说明比较的是数组类型
   if (Array.isArray(diffResult)) {
-    console.log('Top-level array diff detected, calling parseArrayDiff')
     parseArrayDiff(diffResult, path || 'root', diffs)
     return diffs
   }
   
   if (typeof diffResult !== 'object') {
-    console.log('Early return: diffResult is not object')
     return diffs
   }
   
   const processDiff = (obj: any, currentPath: string) => {
-    console.log(`processDiff called with path: "${currentPath}"`, obj)
     
     if (typeof obj !== 'object' || obj === null || Array.isArray(obj)) {
-      console.log(`Skipping processing for path "${currentPath}" - not a valid object`)
       return
     }
     
     Object.keys(obj).forEach(key => {
       const value = obj[key]
-      console.log(`Processing key: "${key}" with value:`, value, `at path: "${currentPath}"`)
       
       if (key.endsWith('__added')) {
         // 新增字段
         const fieldName = key.substring(0, key.length - '__added'.length)
         const fullPath = currentPath ? `${currentPath}.${fieldName}` : fieldName
-        console.log(`Found ADDED field: "${fieldName}" at path: "${fullPath}"`)
         diffs.push({
           path: fullPath,
           type: DiffType.ADDED,
@@ -138,7 +125,6 @@ const parseDiffResult = (
         // 删除字段
         const fieldName = key.substring(0, key.length - '__deleted'.length)
         const fullPath = currentPath ? `${currentPath}.${fieldName}` : fieldName
-        console.log(`Found DELETED field: "${fieldName}" at path: "${fullPath}"`)
         diffs.push({
           path: fullPath,
           type: DiffType.REMOVED,
@@ -149,7 +135,6 @@ const parseDiffResult = (
                  '__old' in value && '__new' in value && Object.keys(value).length === 2) {
         // 值变更 - 严格检查只有__old和__new两个键
         const fullPath = currentPath ? `${currentPath}.${key}` : key
-        console.log(`Found CHANGED field: "${key}" at path: "${fullPath}"`)
         diffs.push({
           path: fullPath,
           type: DiffType.CHANGED,
@@ -160,22 +145,18 @@ const parseDiffResult = (
       } else if (Array.isArray(value)) {
         // 数组差异
         const fullPath = currentPath ? `${currentPath}.${key}` : key
-        console.log(`Found ARRAY diff for field: "${key}" at path: "${fullPath}"`)
         parseArrayDiff(value, fullPath, diffs)
       } else if (typeof value === 'object' && value !== null) {
         // 嵌套对象 - 继续递归处理
         const fullPath = currentPath ? `${currentPath}.${key}` : key
-        console.log(`Found nested object for field: "${key}" at path: "${fullPath}" - recursing`)
         processDiff(value, fullPath)
       } else {
-        console.log(`Ignoring unchanged field: "${key}" at path: "${currentPath}"`)
       }
       // 其他情况（如普通值）直接忽略，因为它们表示未改变的部分
     })
   }
   
   processDiff(diffResult, path)
-  console.log('Final parsed diffs:', diffs)
   return diffs
 }
 
@@ -185,20 +166,16 @@ const parseDiffResult = (
  * 改进：检测连续的删除+新增操作，合并为CHANGED类型
  */
 const parseArrayDiff = (arrayDiff: any[], path: string, diffs: DiffItem[]) => {
-  console.log(`parseArrayDiff called for path: ${path}`, arrayDiff)
   
   // 先收集所有的操作
   const operations: Array<{operation: string, value: any, index: number}> = []
   
   arrayDiff.forEach((item, index) => {
-    console.log(`Processing array item ${index}:`, item)
     
     if (Array.isArray(item) && item.length >= 2) {
       const [operation, value] = item
       operations.push({ operation, value, index })
-      console.log(`Collected operation: ${operation}, value:`, value, `at index: ${index}`)
     } else {
-      console.log(`Skipping non-array or short item at index ${index}:`, item)
     }
   })
   
@@ -242,9 +219,7 @@ const parseArrayDiff = (arrayDiff: any[], path: string, diffs: DiffItem[]) => {
         description: `数组元素变更: ${formatValue(leftValue)} → ${formatValue(rightValue)}`
       })
       
-      console.log(`Added CHANGED diff for paired operations at path: ${itemPath}`)
-      console.log(`  Left value:`, leftValue)
-      console.log(`  Right value:`, rightValue)
+
       
       // 标记两个操作都已处理
       processedIndices.add(i)
@@ -266,7 +241,6 @@ const parseArrayDiff = (arrayDiff: any[], path: string, diffs: DiffItem[]) => {
         rightValue: operation.value,
         description: `新增数组元素: ${formatValue(operation.value)}`
       })
-      console.log(`Added ADDED diff for unpaired operation at path: ${itemPath}`)
     } else if (operation.operation === '-') {
       diffs.push({
         path: itemPath,
@@ -274,7 +248,6 @@ const parseArrayDiff = (arrayDiff: any[], path: string, diffs: DiffItem[]) => {
         leftValue: operation.value,
         description: `删除数组元素: ${formatValue(operation.value)}`
       })
-      console.log(`Added REMOVED diff for unpaired operation at path: ${itemPath}`)
     } else if (operation.operation === '~') {
       // 直接的修改操作
       diffs.push({
@@ -284,9 +257,7 @@ const parseArrayDiff = (arrayDiff: any[], path: string, diffs: DiffItem[]) => {
         rightValue: arrayDiff[operation.index][2],
         description: `数组元素变更: ${formatValue(arrayDiff[operation.index][1])} → ${formatValue(arrayDiff[operation.index][2])}`
       })
-      console.log(`Added CHANGED diff for ~ operation at path: ${itemPath}`)
     } else {
-      console.log(`Unknown operation: ${operation.operation} for path: ${itemPath}`)
     }
   }
 }
@@ -347,22 +318,10 @@ export const compareJson = (leftJson: string, rightJson: string): DiffResult => 
 
     // 使用json-diff进行比较
     const rawDiff = jsonDiff.diff(leftParsed, rightParsed)
-    console.log('rawDiff', rawDiff)
     
-    // 特殊调试：检查bdCds相关的差异
-    if (rawDiff && typeof rawDiff === 'object') {
-      const bdCdsKeys = Object.keys(rawDiff).filter(key => key.includes('bdCds') || key.includes('Cds'))
-      if (bdCdsKeys.length > 0) {
-        console.log('发现bdCds相关的差异:', bdCdsKeys)
-        bdCdsKeys.forEach(key => {
-          console.log(`${key}:`, rawDiff[key])
-        })
-      }
-    }
     
     // 解析差异结果（只包含真正的差异）
     const diffs = rawDiff ? parseDiffResult(rawDiff, leftParsed, rightParsed) : []
-    console.log('diffs', diffs)
     
 
 

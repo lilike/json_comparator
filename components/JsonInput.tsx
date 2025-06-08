@@ -1,5 +1,6 @@
 import { useMemo } from 'react'
 import { AlertCircle, CheckCircle } from 'lucide-react'
+import { useTranslations } from 'next-intl'
 import { isValidJson } from '@/utils/jsonFormatter'
 
 interface JsonInputProps {
@@ -17,6 +18,8 @@ export default function JsonInput({
   error,
   isFormatting = false 
 }: JsonInputProps) {
+  const t = useTranslations()
+  
   // 验证JSON是否有效
   const isValid = useMemo(() => {
     if (!value.trim()) return null
@@ -69,14 +72,14 @@ export default function JsonInput({
         <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
           <div className="flex items-center gap-2 text-blue-400">
             <div className="animate-spin h-4 w-4 border-2 border-blue-400 border-t-transparent rounded-full"></div>
-            <span className="text-sm">格式化中...</span>
+            <span className="text-sm">{t('status.formatting')}</span>
           </div>
         </div>
       )}
       
       {/* 统计信息 */}
       <div className="absolute bottom-2 right-2 text-xs text-gray-400 bg-gray-700 px-2 py-1 rounded">
-        {stats.lines} 行 · {stats.chars} 字符
+        {stats.lines} {t('status.lines')} · {stats.chars} {t('status.characters')}
       </div>
 
       {/* 错误提示 */}
@@ -94,7 +97,7 @@ export default function JsonInput({
         <div className="mt-2 p-2 bg-yellow-900/20 border border-yellow-500 rounded text-yellow-400 text-sm flex-shrink-0">
           <div className="flex items-center gap-2">
             <AlertCircle size={14} />
-            <span>JSON格式不正确，请检查语法</span>
+            <span>{t('errors.invalidJsonFormat')}</span>
           </div>
         </div>
       )}
@@ -104,7 +107,7 @@ export default function JsonInput({
         <div className="mt-2 p-2 bg-green-900/20 border border-green-500 rounded text-green-400 text-sm flex-shrink-0">
           <div className="flex items-center gap-2">
             <CheckCircle size={14} />
-            <span>JSON格式正确</span>
+            <span>JSON {t('status.valid')}</span>
           </div>
         </div>
       )}

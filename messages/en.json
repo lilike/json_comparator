@@ -1,0 +1,78 @@
+{
+  "meta": {
+    "title": "Smart JSON Comparison Tool",
+    "description": "Professional JSON comparison tool that solves formatting, sorting, and difference marking issues"
+  },
+  "nav": {
+    "languageSwitch": "Language",
+    "english": "English",
+    "chinese": "中文"
+  },
+  "buttons": {
+    "compare": "Compare JSON",
+    "formatAll": "Format All",
+    "loadExample": "Load Example",
+    "format": "Format",
+    "minify": "Minify",
+    "sort": "Sort",
+    "copy": "Copy",
+    "backToEdit": "Back to Edit Mode"
+  },
+  "sorting": {
+    "label": "Sort Method",
+    "original": "Original Order",
+    "alphabetical": "Alphabetical",
+    "byType": "By Type",
+    "descriptions": {
+      "none": "Keep the original field order of JSON",
+      "alphabetical": "Sort by field names in alphabetical order",
+      "type": "Group by data types (null < boolean < number < string < array < object)"
+    }
+  },
+  "status": {
+    "lines": "lines",
+    "characters": "characters",
+    "comparing": "Comparing...",
+    "formatting": "Formatting...",
+    "sorting": "Sorting...",
+    "valid": "format is valid"
+  },
+  "errors": {
+    "enterLeftJson": "Please enter left JSON first",
+    "enterRightJson": "Please enter right JSON first",
+    "invalidJsonFormat": "Invalid JSON format, please check syntax",
+    "enterJsonContent": "Please enter JSON content first",
+    "formatFailed": "Format failed",
+    "sortFailed": "Sort failed",
+    "compareFailed": "Comparison failed",
+    "formatError": "Error occurred during formatting",
+    "sortError": "Error occurred during sorting",
+    "compareError": "Error occurred during comparison",
+    "leftJsonError": "Left JSON error",
+    "rightJsonError": "Right JSON error",
+    "emptyContent": "JSON content cannot be empty",
+    "jsonParseError": "JSON format error"
+  },
+  "legend": {
+    "title": "Diff Legend",
+    "added": "Right-side Field",
+    "added_desc": "Field exists only in the right-side JSON",
+    "removed": "Left-side Field",
+    "removed_desc": "Field exists only in the left-side JSON",
+    "modified": "Different Field",
+    "modified_desc": "Field exists but has different value or type",
+    "unchanged": "Unchanged"
+  },
+  "placeholders": {
+    "leftJson": "Enter or paste your first JSON here...",
+    "rightJson": "Enter or paste your second JSON here..."
+  },
+  "messages": {
+    "copied": "Copied to clipboard!",
+    "exampleLoaded": "Example data loaded successfully",
+    "compareSuccess": "JSON comparison completed"
+  },
+  "footer": {
+    "tip": "Tip: Supports automatic formatting, smart sorting, and detailed difference marking"
+  }
+} 

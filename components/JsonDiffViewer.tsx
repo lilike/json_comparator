@@ -14,7 +14,154 @@ interface LineInfo {
   diffs: DiffItem[]
 }
 
-// 简化的行匹配算法，基于关键词匹配
+// 专门处理数组比较的方法
+function matchArrayDiffsToLines(
+  jsonString: string,
+  diffs: DiffItem[],
+  side: 'left' | 'right'
+): Map<number, DiffItem[]> {
+  const lineMatches = new Map<number, DiffItem[]>()
+  
+  if (!jsonString.trim()) return lineMatches
+  
+  const lines = jsonString.split('\n')
+  
+  // 首先尝试解析JSON来获取实际的数组结构
+  let parsedArray: any[] = []
+  try {
+    parsedArray = JSON.parse(jsonString)
+    if (!Array.isArray(parsedArray)) {
+      parsedArray = []
+    }
+  } catch (e) {
+    // 如果解析失败，fallback到基于行的匹配
+    console.warn('Unable to parse JSON array, using line-based matching')
+  }
+  
+  diffs.forEach(diff => {
+    const path = diff.path
+    if (!path) return
+    
+    // 根据差异类型和侧边决定是否应该显示
+    const shouldShow = (() => {
+      switch (diff.type) {
+        case DiffType.ADDED:
+          return side === 'right'
+        case DiffType.REMOVED:
+          return side === 'left'
+        case DiffType.CHANGED:
+          return true
+        default:
+          return false
+      }
+    })()
+    
+    if (!shouldShow) return
+    
+    // 解析数组索引路径，如 "root[0]" 或 "[0]"
+    const parseArrayIndex = (path: string): number => {
+      const match = path.match(/\[(\d+)\]/)
+      return match ? parseInt(match[1]) : -1
+    }
+    
+    const arrayIndex = parseArrayIndex(path)
+    if (arrayIndex === -1) return
+    
+    // 获取目标值进行精确匹配
+    const targetValue = (() => {
+      if (diff.type === DiffType.ADDED) return diff.rightValue
+      if (diff.type === DiffType.REMOVED) return diff.leftValue
+      if (diff.type === DiffType.CHANGED) {
+        return side === 'left' ? diff.leftValue : diff.rightValue
+      }
+      return undefined
+    })()
+    
+    if (targetValue === undefined) return
+    
+    // 对于多行对象，找到对象的开始行（包含第一个字段的行）
+    const targetStr = JSON.stringify(targetValue)
+    let bestMatchLine = -1
+    let bestScore = 0
+    
+    // 如果目标值是对象，我们需要找到包含该对象第一个字段的行
+    if (typeof targetValue === 'object' && targetValue !== null) {
+      const firstKey = Object.keys(targetValue)[0]
+      const firstValue = targetValue[firstKey]
+      
+      for (let i = 0; i < lines.length; i++) {
+        const line = lines[i].trim()
+        const lineNumber = i + 1
+        
+        // 跳过结构性字符行
+        if (!line || line === '[' || line === ']' || line === ',') {
+          continue
+        }
+        
+        let score = 0
+        
+        // 检查是否包含第一个字段
+        if (line.includes(`"${firstKey}"`)) {
+          score += 50
+          
+          // 如果还包含对应的值，增加得分
+          const valueStr = JSON.stringify(firstValue)
+          if (line.includes(valueStr)) {
+            score += 50
+          }
+        }
+        
+        if (score > bestScore) {
+          bestScore = score
+          bestMatchLine = lineNumber
+        }
+      }
+    } else {
+      // 对于基本值，直接查找包含该值的行
+      for (let i = 0; i < lines.length; i++) {
+        const line = lines[i].trim()
+        const lineNumber = i + 1
+        
+        if (!line || line === '[' || line === ']' || line === ',' || line === '{' || line === '}') {
+          continue
+        }
+        
+        if (line.includes(targetStr)) {
+          bestScore = 100
+          bestMatchLine = lineNumber
+          break
+        }
+      }
+    }
+    
+    // 如果找到匹配，记录它
+    if (bestMatchLine > 0 && bestScore > 0) {
+      if (!lineMatches.has(bestMatchLine)) {
+        lineMatches.set(bestMatchLine, [])
+      }
+      lineMatches.get(bestMatchLine)!.push(diff)
+    }
+  })
+  
+  return lineMatches
+}
+
+// 检查是否为数组比较
+function isArrayComparison(diffs: DiffItem[]): boolean {
+  if (diffs.length === 0) return false
+  
+  // 检查是否大部分差异都是数组索引路径
+  const arrayPathCount = diffs.filter(diff => {
+    const path = diff.path
+    return path && (path.match(/\[\d+\]/) !== null)
+  }).length
+  
+  // 如果超过一半的差异是数组索引路径，认为是数组比较
+  return arrayPathCount > diffs.length * 0.5
+}
+
+// 行匹配算法，基于关键词和值匹配
+// 支持处理顶层数组索引格式如 "[0]" 以及嵌套对象路径 
 function matchDiffsToLines(
   jsonString: string,
   diffs: DiffItem[],
@@ -204,12 +351,7 @@ function matchDiffsToLines(
 
 export default function JsonDiffViewer({ json, diffs, side, label }: JsonDiffViewerProps) {
   
-  // 添加调试信息
-  console.log(`[JsonDiffViewer] ${label} (${side}) received diffs:`, diffs)
-  console.log(`[JsonDiffViewer] ${label} (${side}) JSON preview:`, json.substring(0, 100))
-  console.log(`[JsonDiffViewer] ${label} (${side}) JSON has \\n:`, json.includes('\n'))
-  console.log(`[JsonDiffViewer] ${label} (${side}) JSON lines count:`, json.split('\n').length)
-  
+
   // 解析JSON并生成带行号的结构  
   const linesWithDiffs = useMemo(() => {
     if (!json.trim()) return []
@@ -217,9 +359,11 @@ export default function JsonDiffViewer({ json, diffs, side, label }: JsonDiffVie
     const lines = json.split('\n')
     const result: LineInfo[] = []
     
-    // 使用简化的匹配算法
-    const lineMatchMap = matchDiffsToLines(json, diffs, side)
-    console.log(`[JsonDiffViewer] ${label} (${side}) line matches:`, lineMatchMap)
+    // 根据差异类型选择匹配算法
+    const isArrayDiff = isArrayComparison(diffs)
+    const lineMatchMap = isArrayDiff 
+      ? matchArrayDiffsToLines(json, diffs, side)
+      : matchDiffsToLines(json, diffs, side)
     
     lines.forEach((content, index) => {
       const lineNumber = index + 1
@@ -259,7 +403,6 @@ export default function JsonDiffViewer({ json, diffs, side, label }: JsonDiffVie
   // 渲染单行内容
   const renderLine = (lineInfo: LineInfo) => {
     const { lineNumber, content, diffs: lineDiffs } = lineInfo
-    
     if (lineDiffs.length === 0) {
       return (
         <div key={lineNumber} className="flex">
@@ -290,8 +433,8 @@ export default function JsonDiffViewer({ json, diffs, side, label }: JsonDiffVie
     // 解析路径，区分普通字段和数组索引
     const parseFieldFromPath = (path: string) => {
       // 处理顶层数组的特殊情况，如 "root[0]"
-      if (path.startsWith('root[') && path.endsWith(']')) {
-        const indexMatch = path.match(/^root\[(\d+)\]$/)
+      if (path.startsWith('[') && path.endsWith(']')) {
+        const indexMatch = path.match(/^\[(\d+)\]$/)
         if (indexMatch) {
           return {
             isArrayIndex: true,

@@ -96,16 +96,17 @@ const sortObjectRecursively = (obj: any, sortType: SortOption): any => {
  * 对JSON字符串进行排序
  * @param jsonString - JSON字符串
  * @param sortType - 排序类型
+ * @param t - 国际化翻译函数
  * @returns 排序结果
  */
-export const sortJson = (jsonString: string, sortType: SortOption): SortResult => {
+export const sortJson = (jsonString: string, sortType: SortOption, t?: any): SortResult => {
   const trimmedJson = jsonString.trim()
   
   // 检查是否为空
   if (!trimmedJson) {
     return {
       success: false,
-      error: 'JSON内容不能为空'
+      error: t ? t('errors.emptyContent') : 'JSON内容不能为空'
     }
   }
 
@@ -125,9 +126,10 @@ export const sortJson = (jsonString: string, sortType: SortOption): SortResult =
     }
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : '未知错误'
+    const baseError = t ? t('errors.jsonParseError') : 'JSON格式错误'
     return {
       success: false,
-      error: `JSON格式错误: ${errorMessage}`
+      error: `${baseError}: ${errorMessage}`
     }
   }
 }
@@ -135,34 +137,64 @@ export const sortJson = (jsonString: string, sortType: SortOption): SortResult =
 /**
  * 获取排序选项的显示名称
  * @param sortType - 排序类型
+ * @param t - 国际化翻译函数
  * @returns 显示名称
  */
-export const getSortDisplayName = (sortType: SortOption): string => {
+export const getSortDisplayName = (sortType: SortOption, t?: any): string => {
+  if (!t) {
+    // 回退到硬编码的中文（向后兼容）
+    switch (sortType) {
+      case 'none':
+        return '原始顺序'
+      case 'alphabetical':
+        return '字母排序'
+      case 'type':
+        return '类型排序'
+      default:
+        return '未知排序'
+    }
+  }
+
   switch (sortType) {
     case 'none':
-      return '原始顺序'
+      return t('sorting.original')
     case 'alphabetical':
-      return '字母排序'
+      return t('sorting.alphabetical')
     case 'type':
-      return '类型排序'
+      return t('sorting.byType')
     default:
-      return '未知排序'
+      return t('sorting.original')
   }
 }
 
 /**
  * 获取排序选项的描述
  * @param sortType - 排序类型
+ * @param t - 国际化翻译函数
  * @returns 描述信息
  */
-export const getSortDescription = (sortType: SortOption): string => {
+export const getSortDescription = (sortType: SortOption, t?: any): string => {
+  if (!t) {
+    // 回退到硬编码的中文（向后兼容）
+    switch (sortType) {
+      case 'none':
+        return '保持JSON原有的字段顺序'
+      case 'alphabetical':
+        return '按字段名称的字母顺序排列'
+      case 'type':
+        return '按数据类型分组排列（null < boolean < number < string < array < object）'
+      default:
+        return ''
+    }
+  }
+
   switch (sortType) {
     case 'none':
-      return '保持JSON原有的字段顺序'
+      return t('sorting.descriptions.none')
     case 'alphabetical':
-      return '按字段名称的字母顺序排列'
+      return t('sorting.descriptions.alphabetical')
     case 'type':
-      return '按数据类型分组排列（null < boolean < number < string < array < object）'
+      return t('sorting.descriptions.type')
     default:
       return ''
   }
