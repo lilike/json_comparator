@@ -6,7 +6,105 @@
   "nav": {
     "languageSwitch": "Language",
     "english": "English",
-    "chinese": "中文"
+    "chinese": "中文",
+    "home": "Home",
+    "compare": "JSON Compare",
+    "format": "JSON Format",
+    "validate": "JSON Validate",
+    "repair": "JSON Repair",
+    "convert": "JSON Convert",
+    "minify": "JSON Minify"
+  },
+  "pages": {
+    "home": {
+      "title": "JSON Tools",
+      "subtitle": "Professional JSON processing tool suite providing JSON comparison, formatting, validation, repair, conversion and more. Fast, secure, and free with large file support for efficient JSON data operations.",
+      "heroButton1": "Start Using JSON Compare",
+      "heroButton2": "JSON Format Tool",
+      "toolsTitle": "Powerful JSON Tool Suite",
+      "toolsSubtitle": "Covering all aspects of JSON processing, from basic formatting to complex data conversion, meeting all developer needs",
+      "featuresTitle": "Why Choose Us",
+      "featuresSubtitle": "Professional, efficient, and secure JSON processing tools to make your development work easier",
+      "ctaTitle": "Get Started Now",
+      "ctaSubtitle": "No registration, no download required. Use our JSON tools directly in your browser"
+    },
+    "compare": {
+      "title": "JSON Smart Compare Tool",
+      "subtitle": "Professional JSON difference detection tool supporting large files, complex nested structures, and intelligent array matching. Precisely identify field changes, additions, deletions with visual difference annotation.",
+      "originalLabel": "Original JSON",
+      "comparedLabel": "Compared JSON",
+      "statsTitle": "Difference Analysis Report",
+      "statsAdded": "Added",
+      "statsRemoved": "Removed",
+      "statsChanged": "Changed",
+      "statsMoved": "Moved"
+    },
+    "format": {
+      "title": "JSON Format Tool",
+      "subtitle": "Professional JSON beautification and compression tool with custom indentation and multiple sorting options. Make JSON code more beautiful and readable, improving development efficiency.",
+      "originalLabel": "Original JSON",
+      "resultLabel": "Formatted Result",
+      "formatButton": "Format JSON",
+      "minifyButton": "Minify JSON",
+      "sortLabel": "Sort Method",
+      "sortNone": "No Sort",
+      "sortAlpha": "Alphabetical",
+      "sortType": "By Type"
+    },
+    "validate": {
+      "title": "JSON Validate Tool",
+      "subtitle": "Professional JSON syntax checker that intelligently detects JSON format errors with detailed error reports and fix suggestions. Quickly locate issues and improve code quality.",
+      "inputLabel": "JSON Input",
+      "resultLabel": "Validation Result",
+      "validateButton": "Validate JSON",
+      "validExample": "Load Valid Example",
+      "invalidExample": "Load Invalid Example",
+      "validResult": "JSON Validation Passed",
+      "validMessage": "Your JSON format is completely correct with no syntax errors found.",
+      "errorTitle": "JSON Syntax Error Found",
+      "errorLocation": "Error Location",
+      "errorSuggestion": "Fix Suggestion",
+      "commonErrors": "Common JSON Errors"
+    },
+    "repair": {
+      "title": "JSON Repair Tool",
+      "subtitle": "Intelligent JSON repair tool that automatically detects and fixes common JSON syntax errors. Supports AI-generated malformed JSON, missing quotes, extra commas and other intelligent repairs.",
+      "inputLabel": "Broken JSON Input",
+      "resultLabel": "Repair Result",
+      "repairButton": "Repair JSON",
+      "loadExample": "Load Broken Example",
+      "repairSuccess": "Repair Complete",
+      "repairFailed": "Repair Failed",
+      "appliedFixes": "Applied Fixes",
+      "warnings": "Warnings"
+    },
+    "convert": {
+      "title": "JSON Convert Tool",
+      "subtitle": "Professional data format conversion tool supporting JSON to XML, CSV, YAML, SQL and other formats. Maintains data structure integrity for various data processing scenarios.",
+      "inputLabel": "JSON Input",
+      "outputLabel": "Output",
+      "convertButton": "Convert to",
+      "formatXml": "XML",
+      "formatCsv": "CSV",
+      "formatYaml": "YAML",
+      "formatSql": "SQL"
+    },
+    "minify": {
+      "title": "JSON Minify Tool",
+      "subtitle": "Intelligent JSON compression tool that removes extra spaces, line breaks and comments to significantly reduce file size. Maintains JSON structure integrity for more efficient data transmission.",
+      "inputLabel": "Original JSON",
+      "resultLabel": "Minified Result",
+      "minifyButton": "Minify JSON",
+      "statsTitle": "Compression Statistics",
+      "originalSize": "Original Size",
+      "minifiedSize": "Minified Size",
+      "spaceSaved": "Space Saved",
+      "compressionRatio": "Compression Ratio"
+    }
+  },
+  "modes": {
+    "compare": "Compare Mode",
+    "repair": "Repair Mode"
   },
   "buttons": {
     "compare": "Compare JSON",
@@ -16,7 +114,12 @@
     "minify": "Minify",
     "sort": "Sort",
     "copy": "Copy",
-    "backToEdit": "Back to Edit Mode"
+    "download": "Download",
+    "repairJson": "Repair JSON",
+    "backToEdit": "Back to Edit",
+    "copyResult": "Copy Result",
+    "downloadJson": "Download JSON",
+    "copyRepaired": "Copy Repaired"
   },
   "sorting": {
     "label": "Sort Method",
@@ -35,13 +138,18 @@
     "comparing": "Comparing...",
     "formatting": "Formatting...",
     "sorting": "Sorting...",
+    "repairing": "Repairing...",
+    "processing": "Processing...",
+    "compressing": "Compressing...",
+    "validating": "Validating...",
+    "converting": "Converting...",
     "valid": "format is valid"
   },
   "errors": {
-    "enterLeftJson": "Please enter left JSON first",
-    "enterRightJson": "Please enter right JSON first",
+    "enterLeftJson": "Please enter left JSON",
+    "enterRightJson": "Please enter right JSON",
     "invalidJsonFormat": "Invalid JSON format, please check syntax",
-    "enterJsonContent": "Please enter JSON content first",
+    "enterJsonContent": "Please enter JSON content",
     "formatFailed": "Format failed",
     "sortFailed": "Sort failed",
     "compareFailed": "Comparison failed",
@@ -51,28 +159,83 @@
     "leftJsonError": "Left JSON error",
     "rightJsonError": "Right JSON error",
     "emptyContent": "JSON content cannot be empty",
-    "jsonParseError": "JSON format error"
+    "jsonParseError": "JSON format error",
+    "repairFailed": "Repair failed",
+    "repairError": "Error occurred during repair",
+    "copyFailed": "Copy failed",
+    "downloadFailed": "Download failed",
+    "validateFailed": "Validation failed",
+    "convertFailed": "Conversion failed",
+    "minifyFailed": "Minification failed"
   },
   "legend": {
     "title": "Diff Legend",
-    "added": "Right-side Field",
+    "added": "Added Field",
     "added_desc": "Field exists only in the right-side JSON",
-    "removed": "Left-side Field",
+    "removed": "Removed Field",
     "removed_desc": "Field exists only in the left-side JSON",
-    "modified": "Different Field",
+    "modified": "Modified Field",
     "modified_desc": "Field exists but has different value or type",
+    "moved": "Moved Field",
+    "moved_desc": "Field position has changed",
     "unchanged": "Unchanged"
   },
   "placeholders": {
-    "leftJson": "Enter or paste your first JSON here...",
-    "rightJson": "Enter or paste your second JSON here..."
+    "leftJson": "Paste or enter your first JSON...",
+    "rightJson": "Paste or enter your second JSON...",
+    "jsonInput": "Please paste or enter JSON content...",
+    "brokenJson": "Paste JSON that needs repair...",
+    "jsonToFormat": "Paste or enter JSON to format...",
+    "jsonToValidate": "Paste or enter JSON to validate...",
+    "jsonToConvert": "Paste or enter JSON to convert...",
+    "jsonToMinify": "Paste JSON to minify..."
   },
   "messages": {
-    "copied": "Copied to clipboard!",
+    "copied": "Copied",
     "exampleLoaded": "Example data loaded successfully",
-    "compareSuccess": "JSON comparison completed"
+    "compareSuccess": "JSON comparison completed",
+    "formatSuccess": "Formatting successful",
+    "repairSuccess": "Repair successful",
+    "validateSuccess": "Validation successful",
+    "convertSuccess": "Conversion successful",
+    "minifySuccess": "Minification successful",
+    "waitingFormat": "Waiting for format",
+    "waitingValidate": "Waiting for validation",
+    "waitingRepair": "Ready to repair JSON",
+    "waitingConvert": "Waiting for conversion",
+    "waitingMinify": "Waiting for minification",
+    "inputAndClick": "Input JSON and click the corresponding button"
   },
   "footer": {
-    "tip": "Tip: Supports automatic formatting, smart sorting, and detailed difference marking"
+    "tip": "Supports deep nested object and array comparison with intelligent field movement and type change detection",
+    "compression": "Intelligent compression algorithm maximizes file size reduction while maintaining JSON structure integrity",
+    "validation": "All validation performed locally to protect your data security. Supports large file validation.",
+    "repair": "Supports fixing: missing quotes, extra commas, JavaScript syntax, comments, undefined values and other common errors",
+    "convert": "Supports complex nested structure conversion, all processing done locally to protect your data security",
+    "format": "Supports large file formatting, all processing done locally to protect your data security"
+  },
+  "features": {
+    "speed": {
+      "title": "Lightning Fast",
+      "description": "Uses latest algorithms, supports large file processing with response time <100ms"
+    },
+    "security": {
+      "title": "Secure & Reliable",
+      "description": "Local processing, no server uploads, protecting your data privacy and security"
+    },
+    "i18n": {
+      "title": "Multi-language Support",
+      "description": "Supports Chinese and English interfaces for global users"
+    },
+    "free": {
+      "title": "Completely Free",
+      "description": "All features completely free, no registration required, use anytime anywhere"
+    }
+  },
+  "stats": {
+    "filesProcessed": "Files Processed",
+    "users": "Users",
+    "tools": "Tools",
+    "averageTime": "Average Time"
   }
-} 
+}

@@ -6,7 +6,105 @@
   "nav": {
     "languageSwitch": "语言",
     "english": "English",
-    "chinese": "中文"
+    "chinese": "中文",
+    "home": "首页",
+    "compare": "JSON比较",
+    "format": "JSON格式化",
+    "validate": "JSON验证",
+    "repair": "JSON修复",
+    "convert": "JSON转换",
+    "minify": "JSON压缩"
+  },
+  "pages": {
+    "home": {
+      "title": "JSON工具箱",
+      "subtitle": "专业的JSON处理工具站，提供JSON比较、格式化、验证、修复、转换等功能。快速、安全、免费，支持大文件处理，让JSON数据操作变得简单高效。",
+      "heroButton1": "开始使用 JSON比较",
+      "heroButton2": "JSON格式化工具",
+      "toolsTitle": "强大的JSON工具集",
+      "toolsSubtitle": "覆盖JSON处理的方方面面，从基础的格式化到复杂的数据转换，满足开发者的所有需求",
+      "featuresTitle": "为什么选择我们",
+      "featuresSubtitle": "专业、高效、安全的JSON处理工具，让您的开发工作更加轻松",
+      "ctaTitle": "立即开始使用",
+      "ctaSubtitle": "无需注册，无需下载，直接在浏览器中使用我们的JSON工具"
+    },
+    "compare": {
+      "title": "JSON智能比较工具",
+      "subtitle": "专业的JSON差异检测工具，支持大文件、复杂嵌套结构和智能数组匹配。精确识别字段变更、新增、删除，提供可视化差异标注。",
+      "originalLabel": "原始JSON",
+      "comparedLabel": "对比JSON",
+      "statsTitle": "差异分析报告",
+      "statsAdded": "新增",
+      "statsRemoved": "删除",
+      "statsChanged": "修改",
+      "statsMoved": "移动"
+    },
+    "format": {
+      "title": "JSON格式化工具",
+      "subtitle": "专业的JSON美化和压缩工具，支持自定义缩进、多种排序方式。让JSON代码更美观、更易读，提高开发效率。",
+      "originalLabel": "原始JSON",
+      "resultLabel": "格式化结果",
+      "formatButton": "格式化JSON",
+      "minifyButton": "压缩JSON",
+      "sortLabel": "排序方式",
+      "sortNone": "不排序",
+      "sortAlpha": "字母排序",
+      "sortType": "类型排序"
+    },
+    "validate": {
+      "title": "JSON验证工具",
+      "subtitle": "专业的JSON语法检查器，智能检测JSON格式错误，提供详细的错误报告和修复建议。快速定位问题，提高代码质量。",
+      "inputLabel": "JSON输入",
+      "resultLabel": "验证结果",
+      "validateButton": "验证JSON",
+      "validExample": "加载有效示例",
+      "invalidExample": "加载无效示例",
+      "validResult": "JSON验证通过",
+      "validMessage": "您的JSON格式完全正确，没有发现任何语法错误。",
+      "errorTitle": "发现JSON语法错误",
+      "errorLocation": "错误位置",
+      "errorSuggestion": "修复建议",
+      "commonErrors": "常见JSON错误"
+    },
+    "repair": {
+      "title": "JSON修复工具",
+      "subtitle": "智能JSON修复工具，自动检测和修复常见的JSON语法错误。支持AI生成的错误JSON、缺失引号、多余逗号等问题的智能修复。",
+      "inputLabel": "错误JSON输入",
+      "resultLabel": "修复结果",
+      "repairButton": "修复JSON",
+      "loadExample": "加载错误示例",
+      "repairSuccess": "修复完成",
+      "repairFailed": "修复失败",
+      "appliedFixes": "应用的修复",
+      "warnings": "注意事项"
+    },
+    "convert": {
+      "title": "JSON转换工具",
+      "subtitle": "专业的数据格式转换工具，支持JSON与XML、CSV、YAML、SQL等格式的相互转换。保持数据结构完整性，满足不同场景的数据处理需求。",
+      "inputLabel": "JSON输入",
+      "outputLabel": "输出",
+      "convertButton": "转换为",
+      "formatXml": "XML",
+      "formatCsv": "CSV",
+      "formatYaml": "YAML",
+      "formatSql": "SQL"
+    },
+    "minify": {
+      "title": "JSON压缩工具",
+      "subtitle": "智能JSON压缩工具，移除多余空格、换行符和注释，大幅减小文件大小。保持JSON结构完整性，让数据传输更高效。",
+      "inputLabel": "原始JSON",
+      "resultLabel": "压缩结果",
+      "minifyButton": "压缩JSON",
+      "statsTitle": "压缩统计",
+      "originalSize": "原始大小",
+      "minifiedSize": "压缩后",
+      "spaceSaved": "节省空间",
+      "compressionRatio": "压缩率"
+    }
+  },
+  "modes": {
+    "compare": "比较模式",
+    "repair": "修复模式"
   },
   "buttons": {
     "compare": "比较JSON",
@@ -16,7 +114,12 @@
     "minify": "压缩",
     "sort": "排序",
     "copy": "复制",
-    "backToEdit": "返回编辑模式"
+    "download": "下载",
+    "repairJson": "修复JSON",
+    "backToEdit": "返回编辑模式",
+    "copyResult": "复制结果",
+    "downloadJson": "下载JSON",
+    "copyRepaired": "复制修复结果"
   },
   "sorting": {
     "label": "排序方式",
@@ -35,13 +138,18 @@
     "comparing": "比较中...",
     "formatting": "格式化中...",
     "sorting": "排序中...",
+    "repairing": "修复中...",
+    "processing": "处理中...",
+    "compressing": "压缩中...",
+    "validating": "验证中...",
+    "converting": "转换中...",
     "valid": "格式正确"
   },
   "errors": {
-    "enterLeftJson": "请先输入左侧JSON",
-    "enterRightJson": "请先输入右侧JSON",
+    "enterLeftJson": "请输入左侧JSON",
+    "enterRightJson": "请输入右侧JSON",
     "invalidJsonFormat": "JSON格式不正确，请检查语法",
-    "enterJsonContent": "请先输入JSON内容",
+    "enterJsonContent": "请输入JSON内容",
     "formatFailed": "格式化失败",
     "sortFailed": "排序失败",
     "compareFailed": "比较失败",
@@ -51,28 +159,83 @@
     "leftJsonError": "左侧JSON错误",
     "rightJsonError": "右侧JSON错误",
     "emptyContent": "JSON内容不能为空",
-    "jsonParseError": "JSON格式错误"
+    "jsonParseError": "JSON格式错误",
+    "repairFailed": "修复失败",
+    "repairError": "修复过程中发生错误",
+    "copyFailed": "复制失败",
+    "downloadFailed": "下载失败",
+    "validateFailed": "验证失败",
+    "convertFailed": "转换失败",
+    "minifyFailed": "压缩失败"
   },
   "legend": {
     "title": "差异图例",
-    "added": "右侧字段",
+    "added": "新增字段",
     "added_desc": "仅在右侧JSON中存在的字段",
-    "removed": "左侧字段",
+    "removed": "删除字段",
     "removed_desc": "仅在左侧JSON中存在的字段",
-    "modified": "不同字段",
+    "modified": "修改字段",
     "modified_desc": "字段存在但值或类型不同",
+    "moved": "移动字段",
+    "moved_desc": "字段位置发生变化",
     "unchanged": "未变更"
   },
   "placeholders": {
-    "leftJson": "在此输入或粘贴第一个JSON...",
-    "rightJson": "在此输入或粘贴第二个JSON..."
+    "leftJson": "粘贴或输入第一个JSON...",
+    "rightJson": "粘贴或输入第二个JSON...",
+    "jsonInput": "请粘贴或输入JSON内容...",
+    "brokenJson": "粘贴需要修复的JSON...",
+    "jsonToFormat": "粘贴或输入需要格式化的JSON...",
+    "jsonToValidate": "粘贴或输入需要验证的JSON...",
+    "jsonToConvert": "粘贴或输入需要转换的JSON...",
+    "jsonToMinify": "粘贴需要压缩的JSON..."
   },
   "messages": {
-    "copied": "已复制到剪贴板！",
+    "copied": "已复制",
     "exampleLoaded": "示例数据加载成功",
-    "compareSuccess": "JSON比较完成"
+    "compareSuccess": "JSON比较完成",
+    "formatSuccess": "格式化成功",
+    "repairSuccess": "修复成功",
+    "validateSuccess": "验证成功",
+    "convertSuccess": "转换成功",
+    "minifySuccess": "压缩成功",
+    "waitingFormat": "等待格式化",
+    "waitingValidate": "等待验证", 
+    "waitingRepair": "准备修复JSON",
+    "waitingConvert": "等待转换",
+    "waitingMinify": "等待压缩",
+    "inputAndClick": "输入JSON并点击相应按钮"
   },
   "footer": {
-    "tip": "提示：支持自动格式化、智能排序和详细的差异标记"
+    "tip": "支持深层嵌套对象、数组比较，智能识别字段移动和类型变更",
+    "compression": "智能压缩算法，最大化减小文件大小的同时保持JSON结构完整性",
+    "validation": "所有验证在本地完成，保护您的数据安全。支持大文件验证。",
+    "repair": "支持修复: 缺失引号、多余逗号、JavaScript语法、注释、undefined值等常见错误",
+    "convert": "支持复杂嵌套结构转换，所有处理在本地完成，保护您的数据安全",
+    "format": "支持大文件格式化，所有处理在本地完成，保护您的数据安全"
+  },
+  "features": {
+    "speed": {
+      "title": "极速处理", 
+      "description": "采用最新算法，支持大文件快速处理，响应时间<100ms"
+    },
+    "security": {
+      "title": "安全可靠",
+      "description": "本地处理，不上传服务器，保护您的数据隐私和安全"
+    },
+    "i18n": {
+      "title": "多语言支持",
+      "description": "支持中文和英文界面，适合全球用户使用"
+    },
+    "free": {
+      "title": "完全免费",
+      "description": "所有功能完全免费，无需注册，随时随地使用"
+    }
+  },
+  "stats": {
+    "filesProcessed": "处理文件数",
+    "users": "用户数量", 
+    "tools": "工具数量",
+    "averageTime": "平均处理时间"
   }
-} 
+}

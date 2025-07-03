@@ -1,8 +1,9 @@
 /**
- * JSON Diff Adapter - 使用json-diff第三方库
- * 替代原来的自研JSON比对算法
+ * JSON Diff Adapter - 使用jsondiffpatch第三方库
+ * 集成最佳开源JSON比对算法，支持复杂嵌套结构和数组智能匹配
  */
 
+import * as jsondiffpatch from 'jsondiffpatch'
 import * as jsonDiff from 'json-diff'
 
 /**
@@ -11,7 +12,8 @@ import * as jsonDiff from 'json-diff'
 export enum DiffType {
   ADDED = 'added',
   REMOVED = 'removed', 
-  CHANGED = 'changed'
+  CHANGED = 'changed',
+  MOVED = 'moved'
 }
 
 /**
@@ -23,6 +25,8 @@ export interface DiffItem {
   leftValue?: any
   rightValue?: any
   description: string
+  oldIndex?: number // 用于移动操作
+  newIndex?: number // 用于移动操作
 }
 
 /**
@@ -34,10 +38,26 @@ export interface DiffResult {
   error?: string
   leftParsed?: any
   rightParsed?: any
-  leftFormatted?: string // 保留格式化后的左侧JSON字符串
-  rightFormatted?: string // 保留格式化后的右侧JSON字符串
-  rawDiff?: any // json-diff的原始结果
+  leftFormatted?: string
+  rightFormatted?: string
+  rawDiff?: any
+  engine?: 'jsondiffpatch' | 'json-diff' // 使用的比较引擎
 }
+
+/**
+ * jsondiffpatch实例配置
+ */
+const diffPatcher = jsondiffpatch.create({
+  // 数组匹配算法配置
+  arrays: {
+    detectMove: true, // 检测数组元素移动
+    includeValueOnMove: false
+  },
+  // 对象属性匹配
+  propertyFilter: function(name: string, context: any) {
+    return true // 比较所有属性
+  }
+})
 
 /**
  * 格式化值为显示字符串
@@ -52,34 +72,159 @@ const formatValue = (value: any): string => {
 }
 
 /**
- * 根据路径获取对象中的值
+ * 解析jsondiffpatch的差异结果
+ * jsondiffpatch格式：
+ * - [oldValue, newValue] - 表示值变更
+ * - [newValue] - 表示新增
+ * - [oldValue, 0, 0] - 表示删除
+ * - ["text_diff", textDiffResult] - 表示文本差异
+ * - _t: "a" - 表示数组类型
  */
-const getValueByPath = (obj: any, path: string): any => {
-  if (!path) return obj
+const parseJsonDiffPatchResult = (
+  diffResult: any,
+  leftParsed: any,
+  rightParsed: any,
+  path: string = ''
+): DiffItem[] => {
+  const diffs: DiffItem[] = []
   
-  const keys = path.split('.')
-  let current = obj
-  
-  for (const key of keys) {
-    if (current && typeof current === 'object' && key in current) {
-      current = current[key]
-    } else {
-      return undefined
-    }
+  if (!diffResult || typeof diffResult !== 'object') {
+    return diffs
   }
   
-  return current
+  const processDelta = (delta: any, currentPath: string, leftObj: any, rightObj: any) => {
+    if (!delta || typeof delta !== 'object') return
+    
+    // 检查是否是数组差异
+    if (delta._t === 'a') {
+      parseArrayDelta(delta, currentPath, leftObj, rightObj, diffs)
+      return
+    }
+    
+    Object.keys(delta).forEach(key => {
+      if (key === '_t') return // 跳过类型标记
+      
+      const value = delta[key]
+      const fullPath = currentPath ? `${currentPath}.${key}` : key
+      
+      if (Array.isArray(value)) {
+        if (value.length === 1) {
+          // 新增
+          diffs.push({
+            path: fullPath,
+            type: DiffType.ADDED,
+            rightValue: value[0],
+            description: `新增字段: ${formatValue(value[0])}`
+          })
+        } else if (value.length === 2) {
+          // 变更
+          diffs.push({
+            path: fullPath,
+            type: DiffType.CHANGED,
+            leftValue: value[0],
+            rightValue: value[1],
+            description: `值变更: ${formatValue(value[0])} → ${formatValue(value[1])}`
+          })
+        } else if (value.length === 3 && value[2] === 0) {
+          // 删除
+          diffs.push({
+            path: fullPath,
+            type: DiffType.REMOVED,
+            leftValue: value[0],
+            description: `删除字段: ${formatValue(value[0])}`
+          })
+        }
+      } else if (typeof value === 'object') {
+        // 嵌套对象差异
+        const leftChild = leftObj && typeof leftObj === 'object' ? leftObj[key] : undefined
+        const rightChild = rightObj && typeof rightObj === 'object' ? rightObj[key] : undefined
+        processDelta(value, fullPath, leftChild, rightChild)
+      }
+    })
+  }
+  
+  processDelta(diffResult, path, leftParsed, rightParsed)
+  return diffs
 }
 
 /**
- * 改进的json-diff结果解析器
- * 严格按照json-diff库的输出格式进行解析：
- * - {__old: oldValue, __new: newValue}: 表示值发生变化
- * - key__added: value: 表示新增字段
- * - key__deleted: value: 表示删除字段
- * - 数组: 特殊格式 [' ', '-', '+'] 等
+ * 解析数组差异（jsondiffpatch格式）
  */
-const parseDiffResult = (
+const parseArrayDelta = (
+  delta: any,
+  path: string,
+  leftArray: any[],
+  rightArray: any[],
+  diffs: DiffItem[]
+) => {
+  Object.keys(delta).forEach(key => {
+    if (key === '_t') return
+    
+    const value = delta[key]
+    const index = parseInt(key)
+    
+    if (Array.isArray(value)) {
+      const itemPath = `${path}[${index}]`
+      
+      if (value.length === 1) {
+        // 新增
+        diffs.push({
+          path: itemPath,
+          type: DiffType.ADDED,
+          rightValue: value[0],
+          description: `新增数组元素: ${formatValue(value[0])}`
+        })
+      } else if (value.length === 2) {
+        // 变更
+        diffs.push({
+          path: itemPath,
+          type: DiffType.CHANGED,
+          leftValue: value[0],
+          rightValue: value[1],
+          description: `数组元素变更: ${formatValue(value[0])} → ${formatValue(value[1])}`
+        })
+      } else if (value.length === 3) {
+        if (value[2] === 0) {
+          // 删除
+          diffs.push({
+            path: itemPath,
+            type: DiffType.REMOVED,
+            leftValue: value[0],
+            description: `删除数组元素: ${formatValue(value[0])}`
+          })
+        } else if (value[2] === 3) {
+          // 移动
+          diffs.push({
+            path: itemPath,
+            type: DiffType.MOVED,
+            leftValue: value[0],
+            rightValue: value[0],
+            oldIndex: index,
+            newIndex: value[1],
+            description: `数组元素移动: 从位置${index} → ${value[1]}`
+          })
+        }
+      }
+    } else if (typeof value === 'object') {
+      // 嵌套对象差异
+      const itemPath = `${path}[${index}]`
+      const leftItem = leftArray && leftArray[index]
+      const rightItem = rightArray && rightArray[index]
+      
+      if (value._t === 'a') {
+        parseArrayDelta(value, itemPath, leftItem, rightItem, diffs)
+      } else {
+        const nestedDiffs = parseJsonDiffPatchResult(value, leftItem, rightItem, itemPath)
+        diffs.push(...nestedDiffs)
+      }
+    }
+  })
+}
+
+/**
+ * 回退到json-diff的解析逻辑
+ */
+const parseJsonDiffResult = (
   diffResult: any,
   leftParsed: any,
   rightParsed: any,
@@ -87,7 +232,6 @@ const parseDiffResult = (
 ): DiffItem[] => {
   const diffs: DiffItem[] = []
 
-  
   if (!diffResult) {
     return diffs
   }
@@ -103,7 +247,6 @@ const parseDiffResult = (
   }
   
   const processDiff = (obj: any, currentPath: string) => {
-    
     if (typeof obj !== 'object' || obj === null || Array.isArray(obj)) {
       return
     }
@@ -150,9 +293,7 @@ const parseDiffResult = (
         // 嵌套对象 - 继续递归处理
         const fullPath = currentPath ? `${currentPath}.${key}` : key
         processDiff(value, fullPath)
-      } else {
       }
-      // 其他情况（如普通值）直接忽略，因为它们表示未改变的部分
     })
   }
   
@@ -161,21 +302,16 @@ const parseDiffResult = (
 }
 
 /**
- * 解析数组差异
- * json-diff的数组格式：[' ', '-', '+'] 等
- * 改进：检测连续的删除+新增操作，合并为CHANGED类型
+ * 解析数组差异（json-diff格式）
  */
 const parseArrayDiff = (arrayDiff: any[], path: string, diffs: DiffItem[]) => {
-  
   // 先收集所有的操作
   const operations: Array<{operation: string, value: any, index: number}> = []
   
   arrayDiff.forEach((item, index) => {
-    
     if (Array.isArray(item) && item.length >= 2) {
       const [operation, value] = item
       operations.push({ operation, value, index })
-    } else {
     }
   })
   
@@ -219,8 +355,6 @@ const parseArrayDiff = (arrayDiff: any[], path: string, diffs: DiffItem[]) => {
         description: `数组元素变更: ${formatValue(leftValue)} → ${formatValue(rightValue)}`
       })
       
-
-      
       // 标记两个操作都已处理
       processedIndices.add(i)
       processedIndices.add(pairedOpIndex)
@@ -257,13 +391,67 @@ const parseArrayDiff = (arrayDiff: any[], path: string, diffs: DiffItem[]) => {
         rightValue: arrayDiff[operation.index][2],
         description: `数组元素变更: ${formatValue(arrayDiff[operation.index][1])} → ${formatValue(arrayDiff[operation.index][2])}`
       })
-    } else {
     }
   }
 }
 
 /**
- * 比较两个JSON字符串
+ * 智能合并删除和新增操作为变更操作
+ */
+const mergeDiffsIntoChanges = (diffs: DiffItem[]): DiffItem[] => {
+  const mergedDiffs: DiffItem[] = []
+  const processedIndices = new Set<number>()
+  
+  for (let i = 0; i < diffs.length; i++) {
+    if (processedIndices.has(i)) continue
+    
+    const currentDiff = diffs[i]
+    
+    // 查找相同路径的配对操作
+    let pairedIndex = -1
+    for (let j = i + 1; j < diffs.length; j++) {
+      if (processedIndices.has(j)) continue
+      
+      const nextDiff = diffs[j]
+      
+      // 检查是否是相同路径的删除+新增配对
+      if (currentDiff.path === nextDiff.path &&
+          ((currentDiff.type === DiffType.REMOVED && nextDiff.type === DiffType.ADDED) ||
+           (currentDiff.type === DiffType.ADDED && nextDiff.type === DiffType.REMOVED))) {
+        pairedIndex = j
+        break
+      }
+    }
+    
+    if (pairedIndex !== -1) {
+      // 找到配对，合并为CHANGED类型
+      const pairedDiff = diffs[pairedIndex]
+      const leftValue = currentDiff.type === DiffType.REMOVED ? currentDiff.leftValue : pairedDiff.leftValue
+      const rightValue = currentDiff.type === DiffType.ADDED ? currentDiff.rightValue : pairedDiff.rightValue
+      
+      mergedDiffs.push({
+        path: currentDiff.path,
+        type: DiffType.CHANGED,
+        leftValue,
+        rightValue,
+        description: `值变更: ${formatValue(leftValue)} → ${formatValue(rightValue)}`
+      })
+      
+      // 标记两个差异都已处理
+      processedIndices.add(i)
+      processedIndices.add(pairedIndex)
+    } else {
+      // 没有找到配对，保持原差异
+      mergedDiffs.push(currentDiff)
+      processedIndices.add(i)
+    }
+  }
+  
+  return mergedDiffs
+}
+
+/**
+ * 比较两个JSON字符串 - 智能选择最佳引擎
  */
 export const compareJson = (leftJson: string, rightJson: string): DiffResult => {
   try {
@@ -316,23 +504,43 @@ export const compareJson = (leftJson: string, rightJson: string): DiffResult => 
       }
     }
 
-    // 使用json-diff进行比较
-    const rawDiff = jsonDiff.diff(leftParsed, rightParsed)
-    
-    
-    // 解析差异结果（只包含真正的差异）
-    const diffs = rawDiff ? parseDiffResult(rawDiff, leftParsed, rightParsed) : []
-    
+    // 优先使用jsondiffpatch引擎
+    try {
+      const jsondiffpatchResult = diffPatcher.diff(leftParsed, rightParsed)
+      
+      if (jsondiffpatchResult) {
+        const rawDiffs = parseJsonDiffPatchResult(jsondiffpatchResult, leftParsed, rightParsed)
+        const optimizedDiffs = mergeDiffsIntoChanges(rawDiffs)
+        
+        return {
+          success: true,
+          diffs: optimizedDiffs,
+          leftParsed,
+          rightParsed,
+          leftFormatted: JSON.stringify(leftParsed, null, 2),
+          rightFormatted: JSON.stringify(rightParsed, null, 2),
+          rawDiff: jsondiffpatchResult,
+          engine: 'jsondiffpatch'
+        }
+      }
+    } catch (jsondiffpatchError) {
+      console.warn('jsondiffpatch failed, falling back to json-diff:', jsondiffpatchError)
+    }
 
+    // 回退到json-diff引擎
+    const jsonDiffResult = jsonDiff.diff(leftParsed, rightParsed)
+    const rawDiffs = jsonDiffResult ? parseJsonDiffResult(jsonDiffResult, leftParsed, rightParsed) : []
+    const optimizedDiffs = mergeDiffsIntoChanges(rawDiffs)
 
     return {
       success: true,
-      diffs: diffs,
+      diffs: optimizedDiffs,
       leftParsed,
       rightParsed,
-      leftFormatted: JSON.stringify(leftParsed, null, 2), // 格式化后的JSON字符串
-      rightFormatted: JSON.stringify(rightParsed, null, 2), // 格式化后的JSON字符串
-      rawDiff
+      leftFormatted: JSON.stringify(leftParsed, null, 2),
+      rightFormatted: JSON.stringify(rightParsed, null, 2),
+      rawDiff: jsonDiffResult,
+      engine: 'json-diff'
     }
   } catch (error) {
     return {
@@ -354,6 +562,8 @@ export const getDiffColorClass = (diffType: DiffType): string => {
       return 'bg-red-500/20 border-red-500 text-red-400'
     case DiffType.CHANGED:
       return 'bg-yellow-500/20 border-yellow-500 text-yellow-400'
+    case DiffType.MOVED:
+      return 'bg-blue-500/20 border-blue-500 text-blue-400'
     default:
       return 'bg-gray-500/20 border-gray-500 text-gray-400'
   }
@@ -370,6 +580,8 @@ export const getDiffIcon = (diffType: DiffType): string => {
       return '-'
     case DiffType.CHANGED:
       return '~'
+    case DiffType.MOVED:
+      return '↔'
     default:
       return '?'
   }
@@ -383,6 +595,7 @@ export const getDiffStats = (diffs: DiffItem[]) => {
     added: 0,
     removed: 0,
     changed: 0,
+    moved: 0,
     total: diffs.length
   }
   
@@ -397,8 +610,11 @@ export const getDiffStats = (diffs: DiffItem[]) => {
       case DiffType.CHANGED:
         stats.changed++
         break
+      case DiffType.MOVED:
+        stats.moved++
+        break
     }
   })
   
   return stats
-} 
+}

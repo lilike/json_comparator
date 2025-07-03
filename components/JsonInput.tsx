@@ -9,6 +9,7 @@ interface JsonInputProps {
   placeholder?: string
   error?: string
   isFormatting?: boolean
+  readOnly?: boolean
 }
 
 export default function JsonInput({ 
@@ -16,7 +17,8 @@ export default function JsonInput({
   onChange, 
   placeholder, 
   error,
-  isFormatting = false 
+  isFormatting = false,
+  readOnly = false
 }: JsonInputProps) {
   const t = useTranslations()
   
@@ -40,16 +42,19 @@ export default function JsonInput({
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
         disabled={isFormatting}
+        readOnly={readOnly}
         className={`w-full flex-1 p-4 bg-gray-800 border rounded-lg text-white font-mono text-sm resize-none outline-none transition-all ${
           isFormatting 
             ? 'opacity-50 cursor-not-allowed border-gray-600' 
-            : error 
-              ? 'border-red-500 focus:ring-2 focus:ring-red-500 focus:border-transparent'
-              : isValid === false
-                ? 'border-yellow-500 focus:ring-2 focus:ring-yellow-500 focus:border-transparent'
-                : isValid === true
-                  ? 'border-green-500 focus:ring-2 focus:ring-green-500 focus:border-transparent'
-                  : 'border-gray-600 focus:ring-2 focus:ring-blue-500 focus:border-transparent'
+            : readOnly
+              ? 'cursor-default border-gray-600 bg-gray-850 focus:ring-2 focus:ring-gray-500 focus:border-transparent'
+              : error 
+                ? 'border-red-500 focus:ring-2 focus:ring-red-500 focus:border-transparent'
+                : isValid === false
+                  ? 'border-yellow-500 focus:ring-2 focus:ring-yellow-500 focus:border-transparent'
+                  : isValid === true
+                    ? 'border-green-500 focus:ring-2 focus:ring-green-500 focus:border-transparent'
+                    : 'border-gray-600 focus:ring-2 focus:ring-blue-500 focus:border-transparent'
         }`}
         spellCheck={false}
       />
