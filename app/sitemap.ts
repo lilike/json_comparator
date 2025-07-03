@@ -7,7 +7,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   // 支持的语言
   const locales = ['en', 'zh-CN']
   
-  // 基础页面
+  // 实际存在的页面路由
   const basePages = [
     '',
     '/compare',
@@ -15,10 +15,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     '/validate',
     '/repair',
     '/convert',
-    '/minify',
-    '/escape',
-    '/schema',
-    '/path'
+    '/minify'
   ]
 
   const sitemap: MetadataRoute.Sitemap = []

@@ -54,21 +54,34 @@ export default async function LocaleLayout({
         <meta name="description" content={siteConfig.description} />
         <meta name="keywords" content={siteConfig.keywords} />
         <meta name="author" content={siteConfig.author} />
+        <meta name="robots" content="index, follow" />
+        <meta httpEquiv="Content-Language" content={locale} />
         
         {/* Open Graph */}
         <meta property="og:type" content="website" />
         <meta property="og:title" content={siteConfig.name} />
         <meta property="og:description" content={siteConfig.description} />
-        <meta property="og:url" content={siteConfig.url} />
-        <meta property="og:site_name" content="JSON工具箱" />
+        <meta property="og:url" content={`${siteConfig.url}/${locale}`} />
+        <meta property="og:site_name" content="Best JSON Compare" />
+        <meta property="og:locale" content={locale === 'zh-CN' ? 'zh_CN' : 'en_US'} />
         
         {/* Twitter Card */}
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content={siteConfig.name} />
         <meta name="twitter:description" content={siteConfig.description} />
+        <meta name="twitter:site" content="@jsontools" />
         
         {/* Canonical URL */}
         <link rel="canonical" href={`${siteConfig.url}/${locale}`} />
+        
+        {/* Alternate languages */}
+        <link rel="alternate" hrefLang="en" href={`${siteConfig.url}/en`} />
+        <link rel="alternate" hrefLang="zh-CN" href={`${siteConfig.url}/zh-CN`} />
+        <link rel="alternate" hrefLang="x-default" href={`${siteConfig.url}/en`} />
+        
+        {/* Preconnect for performance */}
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         
         <title>{siteConfig.name}</title>
       </head>
