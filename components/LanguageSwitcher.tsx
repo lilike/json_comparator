@@ -40,6 +40,9 @@ const LanguageSwitcher = () => {
     if (locale === 'zh-CN') {
       return '中文';
     }
+    if (locale === 'ja') {
+      return '日本語';
+    }
     return 'English'; // 默认显示英文
   };
 
@@ -67,13 +70,23 @@ const LanguageSwitcher = () => {
           </button>
           <button
             onClick={() => handleLanguageChange('zh-CN')}
-            className={`w-full px-3 py-1.5 text-xs text-left transition-colors rounded-b-md ${
+            className={`w-full px-3 py-1.5 text-xs text-left transition-colors ${
               locale === 'zh-CN'
                 ? 'bg-blue-600 text-white'
                 : 'text-gray-300 hover:bg-gray-700 hover:text-white'
             }`}
           >
             中文
+          </button>
+          <button
+            onClick={() => handleLanguageChange('ja')}
+            className={`w-full px-3 py-1.5 text-xs text-left transition-colors rounded-b-md ${
+              locale === 'ja'
+                ? 'bg-blue-600 text-white'
+                : 'text-gray-300 hover:bg-gray-700 hover:text-white'
+            }`}
+          >
+            日本語
           </button>
         </div>
       )}

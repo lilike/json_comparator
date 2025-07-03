@@ -1,0 +1,247 @@
+{
+  "meta": {
+    "title": "スマートJSON比較ツール",
+    "description": "フォーマット、ソート、差分マーキング問題を解決するプロフェッショナルJSON比較ツール"
+  },
+  "nav": {
+    "languageSwitch": "言語",
+    "english": "English",
+    "chinese": "中文",
+    "japanese": "日本語",
+    "home": "ホーム",
+    "compare": "JSON比較",
+    "format": "JSONフォーマット",
+    "reshape": "JSON整形",
+    "validate": "JSON検証",
+    "repair": "JSON修復",
+    "convert": "JSON変換",
+    "minify": "JSON圧縮"
+  },
+  "pages": {
+    "home": {
+      "title": "JSONツールボックス",
+      "subtitle": "JSON比較、フォーマット、検証、修復、変換などを提供するプロフェッショナルなJSON処理ツール。高速、安全、無料で大容量ファイルをサポートし、効率的なJSONデータ操作を実現します。",
+      "heroButton1": "JSON比較を開始",
+      "heroButton2": "JSONフォーマットツール",
+      "toolsTitle": "強力なJSONツールセット",
+      "toolsSubtitle": "基本的なフォーマットから複雑なデータ変換まで、JSON処理のあらゆる側面をカバーし、開発者のすべてのニーズを満たします",
+      "featuresTitle": "私たちを選ぶ理由",
+      "featuresSubtitle": "プロフェッショナル、効率的、安全なJSON処理ツールで、開発作業をより簡単にします",
+      "ctaTitle": "今すぐ始める",
+      "ctaSubtitle": "登録不要、ダウンロード不要。ブラウザで直接JSONツールを使用できます"
+    },
+    "compare": {
+      "title": "JSONスマート比較ツール",
+      "subtitle": "大容量ファイル、複雑なネスト構造、インテリジェントな配列マッチングをサポートするプロフェッショナルなJSON差分検出ツール。フィールドの変更、追加、削除を正確に識別し、視覚的な差分注釈を提供します。",
+      "originalLabel": "元のJSON",
+      "comparedLabel": "比較するJSON",
+      "statsTitle": "差分分析レポート",
+      "statsAdded": "追加",
+      "statsRemoved": "削除",
+      "statsChanged": "変更",
+      "statsMoved": "移動"
+    },
+    "format": {
+      "title": "JSONフォーマットツール",
+      "subtitle": "カスタムインデントと複数のソートオプションを備えたプロフェッショナルなJSON美化・圧縮ツール。JSONコードをより美しく読みやすくし、開発効率を向上させます。",
+      "originalLabel": "元のJSON",
+      "resultLabel": "フォーマット結果",
+      "formatButton": "JSONフォーマット",
+      "minifyButton": "JSON圧縮",
+      "sortLabel": "ソート方法",
+      "sortNone": "ソートなし",
+      "sortAlpha": "アルファベット順",
+      "sortType": "タイプ別"
+    },
+    "validate": {
+      "title": "JSON検証ツール",
+      "subtitle": "JSONフォーマットエラーをインテリジェントに検出し、詳細なエラーレポートと修復提案を提供するプロフェッショナルなJSON構文チェッカー。問題を迅速に特定し、コード品質を向上させます。",
+      "inputLabel": "JSON入力",
+      "resultLabel": "検証結果",
+      "validateButton": "JSON検証",
+      "validExample": "有効な例を読み込み",
+      "invalidExample": "無効な例を読み込み",
+      "validResult": "JSON検証成功",
+      "validMessage": "あなたのJSONフォーマットは完全に正しく、構文エラーは見つかりませんでした。",
+      "errorTitle": "JSON構文エラーが見つかりました",
+      "errorLocation": "エラー位置",
+      "errorSuggestion": "修復提案",
+      "commonErrors": "一般的なJSONエラー"
+    },
+    "repair": {
+      "title": "JSON修復ツール",
+      "subtitle": "一般的なJSON構文エラーを自動検出・修復するインテリジェントなJSON修復ツール。AI生成の不正なJSON、クォート不足、余分なカンマなどの問題をインテリジェントに修復します。",
+      "inputLabel": "壊れたJSON入力",
+      "resultLabel": "修復結果",
+      "repairButton": "JSON修復",
+      "loadExample": "壊れた例を読み込み",
+      "repairSuccess": "修復完了",
+      "repairFailed": "修復失敗",
+      "appliedFixes": "適用された修復",
+      "warnings": "警告"
+    },
+    "convert": {
+      "title": "JSON変換ツール",
+      "subtitle": "JSONとXML、CSV、YAML、SQLなどのフォーマット間の変換をサポートするプロフェッショナルなデータフォーマット変換ツール。データ構造の整合性を保ちながら、さまざまなデータ処理シナリオに対応します。",
+      "inputLabel": "JSON入力",
+      "outputLabel": "出力",
+      "convertButton": "変換先",
+      "formatXml": "XML",
+      "formatCsv": "CSV",
+      "formatYaml": "YAML",
+      "formatSql": "SQL"
+    },
+    "minify": {
+      "title": "JSON圧縮ツール",
+      "subtitle": "余分な空白、改行、コメントを削除してファイルサイズを大幅に縮小するインテリジェントなJSON圧縮ツール。JSON構造の整合性を保ちながら、より効率的なデータ転送を実現します。",
+      "inputLabel": "元のJSON",
+      "resultLabel": "圧縮結果",
+      "minifyButton": "JSON圧縮",
+      "statsTitle": "圧縮統計",
+      "originalSize": "元のサイズ",
+      "minifiedSize": "圧縮後サイズ",
+      "spaceSaved": "節約されたスペース",
+      "compressionRatio": "圧縮率"
+    }
+  },
+  "modes": {
+    "compare": "比較モード",
+    "repair": "修復モード"
+  },
+  "buttons": {
+    "compare": "JSON比較",
+    "formatAll": "すべてフォーマット",
+    "loadExample": "例を読み込み",
+    "format": "フォーマット",
+    "reshape": "整形",
+    "minify": "圧縮",
+    "sort": "ソート",
+    "copy": "コピー",
+    "download": "ダウンロード",
+    "repairJson": "JSON修復",
+    "backToEdit": "編集に戻る",
+    "copyResult": "結果をコピー",
+    "downloadJson": "JSONダウンロード",
+    "copyRepaired": "修復結果をコピー"
+  },
+  "sorting": {
+    "label": "ソート方法",
+    "original": "元の順序",
+    "alphabetical": "アルファベット順",
+    "byType": "タイプ別",
+    "descriptions": {
+      "none": "JSONの元のフィールド順序を保持",
+      "alphabetical": "フィールド名をアルファベット順に並べ替え",
+      "type": "データタイプ別にグループ化（null < boolean < number < string < array < object）"
+    }
+  },
+  "status": {
+    "lines": "行",
+    "characters": "文字",
+    "comparing": "比較中...",
+    "formatting": "フォーマット中...",
+    "reshaping": "整形中...",
+    "sorting": "ソート中...",
+    "repairing": "修復中...",
+    "processing": "処理中...",
+    "compressing": "圧縮中...",
+    "validating": "検証中...",
+    "converting": "変換中...",
+    "valid": "フォーマットが正しい"
+  },
+  "errors": {
+    "enterLeftJson": "左側のJSONを入力してください",
+    "enterRightJson": "右側のJSONを入力してください",
+    "invalidJsonFormat": "JSONフォーマットが正しくありません。構文を確認してください",
+    "enterJsonContent": "JSONコンテンツを入力してください",
+    "formatFailed": "フォーマット失敗",
+    "sortFailed": "ソート失敗",
+    "compareFailed": "比較失敗",
+    "formatError": "フォーマット中にエラーが発生しました",
+    "sortError": "ソート中にエラーが発生しました",
+    "compareError": "比較中にエラーが発生しました",
+    "leftJsonError": "左側のJSONエラー",
+    "rightJsonError": "右側のJSONエラー",
+    "emptyContent": "JSONコンテンツは空にできません",
+    "jsonParseError": "JSONフォーマットエラー",
+    "repairFailed": "修復失敗",
+    "repairError": "修復中にエラーが発生しました",
+    "copyFailed": "コピー失敗",
+    "downloadFailed": "ダウンロード失敗",
+    "validateFailed": "検証失敗",
+    "convertFailed": "変換失敗",
+    "minifyFailed": "圧縮失敗"
+  },
+  "legend": {
+    "title": "差分凡例",
+    "added": "追加フィールド",
+    "added_desc": "右側のJSONにのみ存在するフィールド",
+    "removed": "削除フィールド",
+    "removed_desc": "左側のJSONにのみ存在するフィールド",
+    "modified": "変更フィールド",
+    "modified_desc": "フィールドは存在するが値またはタイプが異なる",
+    "moved": "移動フィールド",
+    "moved_desc": "フィールドの位置が変更された",
+    "unchanged": "変更なし"
+  },
+  "placeholders": {
+    "leftJson": "最初のJSONを貼り付けまたは入力...",
+    "rightJson": "2番目のJSONを貼り付けまたは入力...",
+    "jsonInput": "JSONコンテンツを貼り付けまたは入力してください...",
+    "brokenJson": "修復が必要なJSONを貼り付け...",
+    "jsonToFormat": "フォーマットするJSONを貼り付けまたは入力...",
+    "jsonToValidate": "検証するJSONを貼り付けまたは入力...",
+    "jsonToConvert": "変換するJSONを貼り付けまたは入力...",
+    "jsonToMinify": "圧縮するJSONを貼り付け..."
+  },
+  "messages": {
+    "copied": "コピーしました",
+    "exampleLoaded": "例データの読み込みに成功しました",
+    "compareSuccess": "JSON比較が完了しました",
+    "formatSuccess": "フォーマットが成功しました",
+    "reshapeSuccess": "整形が成功しました",
+    "repairSuccess": "修復が成功しました",
+    "validateSuccess": "検証が成功しました",
+    "convertSuccess": "変換が成功しました",
+    "minifySuccess": "圧縮が成功しました",
+    "waitingFormat": "フォーマット待機中",
+    "waitingReshape": "整形待機中",
+    "waitingValidate": "検証待機中",
+    "waitingRepair": "JSON修復の準備完了",
+    "waitingConvert": "変換待機中",
+    "waitingMinify": "圧縮待機中",
+    "inputAndClick": "JSONを入力して対応するボタンをクリック"
+  },
+  "footer": {
+    "tip": "深くネストされたオブジェクトと配列の比較をサポートし、フィールドの移動とタイプ変更を知的に検出",
+    "compression": "知的圧縮アルゴリズムで、JSON構造の整合性を保ちながらファイルサイズを最大限に削減",
+    "validation": "すべての検証はローカルで行われ、データのセキュリティを保護します。大容量ファイルの検証をサポート。",
+    "repair": "修復サポート：クォート不足、余分なカンマ、JavaScript構文、コメント、undefined値などの一般的なエラー",
+    "convert": "複雑なネスト構造変換をサポート。すべての処理はローカルで行われ、データのセキュリティを保護",
+    "format": "大容量ファイルのフォーマットをサポート。すべての処理はローカルで行われ、データのセキュリティを保護"
+  },
+  "features": {
+    "speed": {
+      "title": "超高速処理",
+      "description": "最新のアルゴリズムを使用し、大容量ファイルの高速処理をサポート。応答時間＜100ms"
+    },
+    "security": {
+      "title": "安全で信頼性が高い",
+      "description": "ローカル処理、サーバーへのアップロードなし、データのプライバシーとセキュリティを保護"
+    },
+    "i18n": {
+      "title": "多言語サポート",
+      "description": "中国語、英語、日本語のインターフェースをサポートし、世界中のユーザーに対応"
+    },
+    "free": {
+      "title": "完全無料",
+      "description": "すべての機能が完全無料、登録不要、いつでもどこでも使用可能"
+    }
+  },
+  "stats": {
+    "filesProcessed": "処理ファイル数",
+    "users": "ユーザー数",
+    "tools": "ツール数",
+    "averageTime": "平均処理時間"
+  }
+}
